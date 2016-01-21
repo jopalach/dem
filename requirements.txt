@@ -1,1 +1,4 @@
-
+pyfakefs
+mock
+virtualenv
+PyYaml
