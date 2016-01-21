@@ -30,7 +30,7 @@ class TestDem(unittest.TestCase):
         self.assertNotEquals(packages['git-python'], None)
         self.assertNotEquals(packages['x11'], None)
 
-    def test_willReadVersionFile(self):
+    def test_willReadVersionFromFile(self):
         packages = reader.packages_from_data(SAMPLE)
 
         self.assertEquals(packages['qt']['version'], '4.8.6')
@@ -38,6 +38,15 @@ class TestDem(unittest.TestCase):
         self.assertEquals(packages['Which']['version'], 'latest')
         self.assertEquals(packages['git-python']['version'], 'latest')
         self.assertEquals(packages['x11']['version'], 'latest')
+
+    def test_willReadTypeFromFile(self):
+        packages = reader.packages_from_data(SAMPLE)
+
+        self.assertEquals(packages['qt']['type'], 'rpm')
+        self.assertEquals(packages['json']['type'], 'zip')
+        self.assertEquals(packages['Which']['type'], 'perl')
+        self.assertEquals(packages['git-python']['type'], 'python')
+        self.assertEquals(packages['x11']['type'], 'rpm')
 
 
 
