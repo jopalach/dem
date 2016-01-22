@@ -13,8 +13,9 @@ def _reformat_versions(packages):
             p['version'] = str(p['version'])
 
 
-def packages_from_data(data):
-    packages = yaml.load(data)
+def packages_from_file(dependencies_file_path):
+    with open(dependencies_file_path, 'r') as f:
+        packages = yaml.load(f)
     _auto_populate_missing_fields(packages)
     _reformat_versions(packages)
     return packages
