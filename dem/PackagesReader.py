@@ -16,6 +16,8 @@ def _reformat_versions(packages):
 def packages_from_file(dependencies_file_path):
     with open(dependencies_file_path, 'r') as f:
         packages = yaml.load(f)
+    if packages is None:
+        packages = {}
     _auto_populate_missing_fields(packages)
     _reformat_versions(packages)
     return packages
