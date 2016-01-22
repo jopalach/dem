@@ -1,9 +1,9 @@
 import os
 
-from PackagesReader import packages_from_file as read
+from . import PackagesReader as reader
 
 
 def get_dem_packages():
-    packages = read('dependencies.yaml')
+    packages = reader.packages_from_file('dependencies.yaml')
 
     os.makedirs('dependencies')
