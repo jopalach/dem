@@ -4,7 +4,7 @@ from . import PackagesReader as reader
 
 
 def get_dem_packages():
-    packages = reader.packages_from_file('dependencies.yaml')
+    packages = reader.packages_from_file('devenv.yaml')
 
     os.makedirs('devenv')
 
