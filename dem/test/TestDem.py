@@ -6,7 +6,7 @@ import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
 from dem import dem as go
 
 
-class MyDem(fake_filesystem_unittest.TestCase):
+class MyTestCase(fake_filesystem_unittest.TestCase):
     def setUp(self):
         self.setUpPyfakefs()
 
