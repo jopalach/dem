@@ -12,7 +12,7 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
 
     def test_willCreateDependenciesFolder(self):
         go.get_dem_packages()
-        self.assertTrue(os.path.exists('dependencies'))
+        self.assertTrue(os.path.exists('devenv'))
 
 
 if __name__ == '__main__':
