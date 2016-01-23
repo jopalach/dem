@@ -8,6 +8,9 @@ class Config:
     def __getitem__(self, item):
         return self._config[item]
 
+    def has_remote_locations(self):
+        return 'remote_locations' in self._config
+
 
 class Packages:
     def __init__(self, dictionary={}):
@@ -24,6 +27,13 @@ class Packages:
 
     def values(self):
         return self._packages.values()
+
+    def archive_packages(self):
+        packages = []
+        for p in self._packages.values():
+            if p['type'] == 'archive':
+                packages.append(p)
+        return packages
 
 
 def _auto_populate_missing_fields(packages):
@@ -43,6 +53,11 @@ def _fixup_remote_locations(config):
         config['remote_locations'] = [config['remote_locations']]
 
 
+def _add_names(packages):
+    for key in packages.keys():
+        packages[key]['name'] = key
+
+
 def devenv_from_file(devenv_file_path):
     with open(devenv_file_path, 'r') as f:
         devenv = yaml.load(f)
@@ -51,6 +66,7 @@ def devenv_from_file(devenv_file_path):
         packages = devenv['packages']
     _auto_populate_missing_fields(packages)
     _reformat_versions(packages)
+    _add_names(packages)
 
     config = {}
     if devenv is not None and 'config' in devenv:
