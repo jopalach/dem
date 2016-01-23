@@ -1,10 +1,10 @@
 import os
 
-from . import PackagesReader as reader
+from . import DevEnvReader as reader
 
 
 def get_dem_packages():
-    packages = reader.packages_from_file('devenv.yaml')
+    (config, packages) = reader.devenv_from_file('devenv.yaml')
 
     os.makedirs('devenv')
 

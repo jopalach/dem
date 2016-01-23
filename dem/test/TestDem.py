@@ -18,9 +18,10 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
 
     def test_willCreateLibrariesFolderWhenGettingAnArchive(self):
         self.fs.CreateFile('devenv.yaml', contents='''
-            -json:
-                version: 1.8
-                type: archive''')
+            packages:
+                -json:
+                    version: 1.8
+                    type: archive''')
 
         go.get_dem_packages()
 
