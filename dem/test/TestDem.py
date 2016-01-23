@@ -30,19 +30,20 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join('devenv', 'libs')))
 
     def test_willUnzipDependencyIntoLibsDirectory(self):
+        remote_location = '{}opt'.format(os.pathsep)
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: \opt
+                remote_locations: ''' + remote_location + '''
 
             packages:
                 json:
                     version: 1.8
                     type: archive''')
-        os.makedirs('\opt')
+        os.makedirs(remote_location)
         self.fs.CreateFile('eggs.txt', contents='''
             I like my eggs runny.''')
 
-        with ZipFile('\opt\json-1.8.zip', 'w') as myzip:
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
             myzip.write('eggs.txt')
 
         go.get_dem_packages()
