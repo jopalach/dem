@@ -1,5 +1,7 @@
 import yaml
 
+from .Packages import Packages
+
 
 def _auto_populate_missing_fields(packages):
     for p in packages.values():
@@ -20,4 +22,4 @@ def packages_from_file(dependencies_file_path):
         packages = {}
     _auto_populate_missing_fields(packages)
     _reformat_versions(packages)
-    return packages
+    return Packages(packages)

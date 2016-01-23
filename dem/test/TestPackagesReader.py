@@ -8,7 +8,7 @@ qt:
     type: rpm
 json:
     version: 1.8
-    type: zip
+    type: archive
 Which:
     type: perl
 git-python:
@@ -48,7 +48,7 @@ class TestPackagesReader(fake_filesystem_unittest.TestCase):
         packages = reader.packages_from_file('dependencies.yaml')
 
         self.assertEquals(packages['qt']['type'], 'rpm')
-        self.assertEquals(packages['json']['type'], 'zip')
+        self.assertEquals(packages['json']['type'], 'archive')
         self.assertEquals(packages['Which']['type'], 'perl')
         self.assertEquals(packages['git-python']['type'], 'python')
         self.assertEquals(packages['x11']['type'], 'rpm')
