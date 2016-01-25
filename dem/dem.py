@@ -17,5 +17,8 @@ def get_dem_packages():
             if config.has_remote_locations():
                 for remote_location in config['remote_locations']:
                     package_file = "{}-{}.zip".format(os.path.join(remote_location, p['name']), p['version'])
-                    with ZipFile(package_file, 'r') as archive:
-                        archive.extractall(os.path.join(libs_dir, p['name']))
+                    if os.path.isfile(package_file):
+                        with ZipFile(package_file, 'r') as archive:
+                            archive.extractall(os.path.join(libs_dir, p['name']))
+                    else:
+                        print("Could not find package: json, version: 1.8")
