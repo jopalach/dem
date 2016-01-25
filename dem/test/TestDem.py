@@ -86,11 +86,12 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location2 = os.path.abspath(os.path.join(os.pathsep, 'opt2'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: [''' + remote_location1 + ',' + remote_location2 + ''']
+                remote_locations: [\'''' + remote_location1 + '\', \'' + remote_location2 + '''\']
             packages:
                 json:
                     version: 1.8
                     type: archive''')
+
         os.makedirs(remote_location1)
         os.makedirs(remote_location2)
         self.fs.CreateFile('eggs.txt', contents='''
