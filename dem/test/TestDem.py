@@ -1,9 +1,12 @@
 import io
 import os
 import unittest
-from unittest.mock import patch
 from zipfile import ZipFile
 
+try:
+    from mock import patch
+except ImportError:
+    from unittest.mock import patch
 try:
     from StringIO import StringIO
 except ImportError:
