@@ -81,6 +81,33 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertEquals(mock_stdout.getvalue(), 'Could not find package: json, version: 1.8\n')
 
+    def test_willInstallFirstPackageFound(self):
+        remote_location1 = os.path.abspath(os.path.join(os.pathsep, 'opt1'))
+        remote_location2 = os.path.abspath(os.path.join(os.pathsep, 'opt2'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: [''' + remote_location1 + ',' + remote_location2 + ''']
+            packages:
+                json:
+                    version: 1.8
+                    type: archive''')
+        os.makedirs(remote_location1)
+        os.makedirs(remote_location2)
+        self.fs.CreateFile('eggs.txt', contents='''
+            I like my eggs runny.''')
+        self.fs.CreateFile('not_my_eggs.txt', contents='''
+            I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location1, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write('eggs.txt')
+        with ZipFile(os.path.join(remote_location2, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write('not_my_eggs.txt')
+
+        go.get_dem_packages()
+
+        self.assertTrue(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
+        self.assertFalse(os.path.exists(os.path.join('devenv', 'libs', 'json', 'not_my_eggs.txt')))
+
 
 
 

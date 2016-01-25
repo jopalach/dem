@@ -8,6 +8,11 @@ class Config:
     def __getitem__(self, item):
         return self._config[item]
 
+    def remote_locations(self):
+        if not self.has_remote_locations():
+            return []
+        return self._config['remote_locations']
+
     def has_remote_locations(self):
         return 'remote_locations' in self._config
 
