@@ -21,4 +21,4 @@ def get_dem_packages():
                         with ZipFile(package_file, 'r') as archive:
                             archive.extractall(os.path.join(libs_dir, p['name']))
                     else:
-                        print("Could not find package: json, version: 1.8")
+                        print("Could not find package: {}, version: {}".format(p['name'], p['version']))
