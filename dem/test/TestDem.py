@@ -1,6 +1,7 @@
 import io
 import os
 import unittest
+from tarfile import TarFile
 from zipfile import ZipFile
 
 try:
@@ -109,7 +110,26 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
         self.assertFalse(os.path.exists(os.path.join('devenv', 'libs', 'json', 'not_my_eggs.txt')))
 
+    @unittest.skip("FakeFS does not support tar?")
+    def test_willUntarDependencyIntoLibsDirectory(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages:
+                json:
+                    version: 1.8
+                    type: archive''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile('eggs.txt', contents='''
+            I like my eggs runny.''')
 
+        with TarFile.open(os.path.join(remote_location, 'json-1.8.tar.gz'), 'w:gz') as tar:
+            tar.add('eggs.txt')
+
+        go.get_dem_packages()
+
+        self.assertTrue(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
 
 
 if __name__ == '__main__':
