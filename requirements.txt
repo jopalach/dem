@@ -1,4 +1,2 @@
-pyfakefs
-mock
 virtualenv
 PyYaml
