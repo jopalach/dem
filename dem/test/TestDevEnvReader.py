@@ -1,5 +1,7 @@
 import unittest
 import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
+from mock import patch, MagicMock
+
 import dem.DevEnvReader as reader
 
 SAMPLE_CONTENT = '''
@@ -45,11 +47,42 @@ packages:
         system: yes
 '''
 
+SAMPLE_CONTENT_WITH_LINUX_AND_ALL_PACKAGES = '''
+config:
+    remote_locations:
+        '/opt'
+packages:
+    qt:
+        version: 4.8.6
+        type: rpm
+packages-linux:
+    json:
+        version: 1.8
+        type: archive
+    Which:
+        type: perl
+'''
+
+SAMPLE_CONTENT_WITH_WINDOWS_AND_ALL_PACKAGES = '''
+config:
+    remote_locations:
+        '/opt'
+packages:
+    qt:
+        version: 4.8.6
+        type: rpm
+packages-windows:
+    json:
+        version: 1.8
+        type: archive
+    Which:
+        type: perl
+'''
+
 
 class TestDevEnvReader(fake_filesystem_unittest.TestCase):
     def setUp(self):
         self.setUpPyfakefs()
-
 
     def test_willReadPackagesFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
@@ -97,6 +130,26 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         (config, packages) = reader.devenv_from_file('devenv.yaml')
 
         self.assertEquals(config['remote_locations'], ['/opt'])
+
+    @patch('platform.system', MagicMock(return_value="linux"))
+    def test_willReadLinuxPackagesFromFile(self):
+        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_LINUX_AND_ALL_PACKAGES)
+
+        (config, packages) = reader.devenv_from_file('devenv.yaml')
+
+        self.assertNotEquals(packages['qt'], None)
+        self.assertNotEquals(packages['json'], None)
+        self.assertNotEquals(packages['Which'], None)
+
+    @patch('platform.system', MagicMock(return_value="windows"))
+    def test_willReadWindowsPackagesFromFile(self):
+        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_WINDOWS_AND_ALL_PACKAGES)
+
+        (config, packages) = reader.devenv_from_file('devenv.yaml')
+
+        self.assertNotEquals(packages['qt'], None)
+        self.assertNotEquals(packages['json'], None)
+        self.assertNotEquals(packages['Which'], None)
 
 
 if __name__ == '__main__':

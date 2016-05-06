@@ -5,7 +5,7 @@ from tarfile import TarFile
 from zipfile import ZipFile
 
 try:
-    from mock import patch
+    from mock import patch, MagicMock
 except ImportError:
     from unittest.mock import patch
 try:
@@ -126,6 +126,92 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         with TarFile.open(os.path.join(remote_location, 'json-1.8.tar.gz'), 'w:gz') as tar:
             tar.add('eggs.txt')
+
+        go.get_dem_packages()
+
+        self.assertTrue(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
+
+    @patch('platform.system', MagicMock(return_value="Windows"))
+    def test_willNotInstallLinuxPackagesForWindowsOS(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages-linux:
+                json:
+                    version: 1.8
+                    type: archive''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile('eggs.txt', contents='''
+            I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write('eggs.txt')
+
+        go.get_dem_packages()
+
+        self.assertFalse(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
+
+    @patch('platform.system', MagicMock(return_value="Linux"))
+    def test_willNotInstallWindowsPackagesForLinuxOS(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+                config:
+                    remote_locations: ''' + remote_location + '''
+                packages-windows:
+                    json:
+                        version: 1.8
+                        type: archive''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile('eggs.txt', contents='''
+                I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write('eggs.txt')
+
+        go.get_dem_packages()
+
+        self.assertFalse(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
+
+
+    @patch('platform.system', MagicMock(return_value="Linux"))
+    def test_willInstallLinuxPackagesForLinuxOS(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages-linux:
+                json:
+                    version: 1.8
+                    type: archive''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile('eggs.txt', contents='''
+            I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write('eggs.txt')
+
+        go.get_dem_packages()
+
+        self.assertTrue(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
+
+
+    @patch('platform.system', MagicMock(return_value="Windows"))
+    def test_willInstallWindowsPackagesForWindowsOS(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+                config:
+                    remote_locations: ''' + remote_location + '''
+                packages-windows:
+                    json:
+                        version: 1.8
+                        type: archive''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile('eggs.txt', contents='''
+                I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write('eggs.txt')
 
         go.get_dem_packages()
 
