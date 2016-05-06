@@ -55,10 +55,11 @@ def _reformat_versions(packages):
 
 
 def _fixup_remote_locations(config):
+    if 'remote_locations' not in config:
+        config['remote_locations'] = []
     if 'remote_locations' in config and not isinstance(config['remote_locations'], list):
         config['remote_locations'] = [config['remote_locations']]
-        _add_additional_search_locations_based_on_platform(config)
-
+    _add_additional_search_locations_based_on_platform(config)
 
 def _add_additional_search_locations_based_on_platform(config):
     (os_short, arch) = _os_info()

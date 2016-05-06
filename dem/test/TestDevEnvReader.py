@@ -118,12 +118,6 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertEquals(packages['git-python']['type'], 'python')
         self.assertEquals(packages['x11']['type'], 'rpm')
 
-    def test_willReadListOfRepositoryLocations(self):
-        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
-
-        (config, packages) = reader.devenv_from_file('devenv.yaml')
-
-        self.assertEquals(config['remote_locations'], ['/opt', 'http://github.com'])
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
