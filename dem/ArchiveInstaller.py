@@ -9,10 +9,8 @@ class ArchiveInstaller:
         self._config = config
         self._packages = packages
 
-    def install_packages(self):
-        if self._packages.has_a_library():
-            libs_dir = os.path.join('devenv', 'libs')
-            os.makedirs(libs_dir)
+    def install_packages(self, project):
+        libs_dir = os.path.join('.devenv', project, 'dependencies')
         self._update_package_with_install_path()
 
         for p in self._packages.archive_packages():

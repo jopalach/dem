@@ -151,6 +151,11 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertNotEquals(packages['json'], None)
         self.assertNotEquals(packages['Which'], None)
 
+    def test_will_exit_if_yaml_file_does_not_exist(self):
+        with self.assertRaises(SystemExit):
+            reader.devenv_from_file('unknown.yaml')
+
+
 
 if __name__ == '__main__':
     unittest.main()
