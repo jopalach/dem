@@ -34,6 +34,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
     def create_environment(self, path):
         pass
 
+    @patch('sys.platform', "win32")
     def test_willCreateDependenciesFolder(self):
         self.fs.CreateFile('devenv.yaml')
 
@@ -41,6 +42,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertTrue(os.path.exists('.devenv'))
 
+    @patch('sys.platform', "win32")
     def test_willUnzipDependencyIntoDependenciesDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -61,6 +63,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'dependencies', 'json', 'eggs.txt')))
 
+    @patch('sys.platform', "win32")
     @patch('sys.stdout', new_callable=StringIO)
     def test_willPrintMessageWhenArchivedPackageCannotBeFound(self, mock_stdout):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
@@ -82,6 +85,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertEquals(mock_stdout.getvalue(), 'Could not find package: json, version: 1.8\n')
 
+    @patch('sys.platform', "win32")
     def test_willInstallFirstPackageFound(self):
         remote_location1 = os.path.abspath(os.path.join(os.pathsep, 'opt1'))
         remote_location2 = os.path.abspath(os.path.join(os.pathsep, 'opt2'))
