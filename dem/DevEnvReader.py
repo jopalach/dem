@@ -34,12 +34,17 @@ class Packages:
         return self._packages.values()
 
     def archive_packages(self):
+        return self._all_packages_of_type('archive')
+
+    def rpm_packages(self):
+        return self._all_packages_of_type('rpm')
+
+    def _all_packages_of_type(self, type):
         packages = []
         for p in self._packages.values():
-            if p['type'] == 'archive':
+            if p['type'] == type:
                 packages.append(p)
         return packages
-
 
 def _auto_populate_missing_fields(packages):
     for p in packages.values():

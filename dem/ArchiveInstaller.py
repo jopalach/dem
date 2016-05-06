@@ -5,12 +5,13 @@ from zipfile import ZipFile
 
 
 class ArchiveInstaller:
-    def __init__(self, config, packages):
+    def __init__(self, project, config, packages):
         self._config = config
         self._packages = packages
+        self._project = project
 
-    def install_packages(self, project):
-        libs_dir = os.path.join('.devenv', project, 'dependencies')
+    def install_packages(self):
+        libs_dir = os.path.join('.devenv', self._project, 'dependencies')
         self._update_package_with_install_path()
 
         for p in self._packages.archive_packages():
@@ -23,7 +24,6 @@ class ArchiveInstaller:
                 elif p['install_from_ext'] == 'tar.gz':
                     with TarFile.open(p['install_from'], 'r:gz') as archive:
                         archive.extractall(os.path.join(libs_dir, p['name']))
-                        print("HI")
                 elif p['install_from_ext'] == 'tar.bz2':
                     with TarFile.open(p['install_from'], 'r:bz2') as archive:
                         archive.extractall(os.path.join(libs_dir, p['name']))

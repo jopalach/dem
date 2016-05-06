@@ -156,6 +156,5 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
             reader.devenv_from_file('unknown.yaml')
 
 
-
 if __name__ == '__main__':
     unittest.main()
