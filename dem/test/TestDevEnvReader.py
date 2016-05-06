@@ -163,8 +163,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
                            os.path.join('http://github.com', 'win32', 'x86_64'),
                            os.path.join('http://github.com', 'win32'), 'http://github.com'])
 
-
-def test_will_exit_if_yaml_file_does_not_exist(self):
+    def test_will_exit_if_yaml_file_does_not_exist(self):
         with self.assertRaises(SystemExit):
             reader.devenv_from_file('unknown.yaml')
 
