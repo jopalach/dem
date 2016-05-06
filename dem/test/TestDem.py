@@ -114,7 +114,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'dependencies', 'json', 'eggs.txt')))
         self.assertFalse(os.path.exists(os.path.join('.devenv', self.project, 'dependencies', 'json', 'not_my_eggs.txt')))
 
-    @unittest.skip("FakeFS does not support tar?")
+    @unittest.skip("FakeFS does not support tar?\n")
     def test_willUntarDependencyIntoLibsDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -221,6 +221,102 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'dependencies', 'json', 'eggs.txt')))
 
+
+    @patch('sys.platform', "win32")
+    @patch('os.pathsep', "/")
+    def test_willUnzipToBinaryDestinationWindowsStrippingParentDirectory(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages:
+                json:
+                    version: 1.8
+                    type: archive
+                    destination: bin''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile(os.path.join('json', 'eggs.exe'), contents='''
+            I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write(os.path.join('json', 'eggs.exe'))
+
+        go.get_dem_packages(self.project)
+
+        self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'Scripts', 'eggs.exe')))
+
+    @patch('sys.platform', "linux")
+    @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
+    @patch('os.pathsep', "/")
+    def test_willUnzipToBinaryDestinationLinuxStrippingParentDirectory(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+               config:
+                   remote_locations: ''' + remote_location + '''
+               packages:
+                   json:
+                       version: 1.8
+                       type: archive
+                       destination: bin''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile(os.path.join('json', 'eggs.exe'), contents='''
+               I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write(os.path.join('json', 'eggs.exe'))
+
+        go.get_dem_packages(self.project)
+
+        self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'bin', 'eggs.exe')))
+
+
+    @patch('sys.platform', "win32")
+    @patch('os.pathsep', "/")
+    def test_willUnzipToPythonSitePackagesDestinationWindowsStrippingParentDirectory(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages:
+                json:
+                    version: 1.8
+                    type: archive
+                    destination: python-site-packages''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile(os.path.join('json', 'eggs.exe'), contents='''
+            I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write(os.path.join('json', 'eggs.exe'))
+
+        go.get_dem_packages(self.project)
+
+        self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'Lib', 'site-packages', 'json', 'eggs.exe')))
+
+
+    @patch('sys.platform', "linux")
+    @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
+    @patch('os.pathsep', "/")
+    def test_willUnzipToPythonSitePackagesDestinationLinuxStrippingParentDirectory(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+               config:
+                   remote_locations: ''' + remote_location + '''
+               packages:
+                   json:
+                       version: 1.8
+                       type: archive
+                       destination: python-site-packages''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile(os.path.join('json', 'eggs.exe'), contents='''
+               I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write(os.path.join('json', 'eggs.exe'))
+
+        go.get_dem_packages(self.project)
+
+        self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'lib', 'python27', 'site-packages', 'json', 'eggs.exe')))
 
 if __name__ == '__main__':
     unittest.main()

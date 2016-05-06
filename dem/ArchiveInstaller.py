@@ -3,15 +3,22 @@ import os
 from tarfile import TarFile
 from zipfile import ZipFile
 
+import sys
+
 
 class ArchiveInstaller:
     def __init__(self, project, config, packages):
         self._config = config
         self._packages = packages
         self._project = project
+        self._path_mapping = dict(linux={'bin': ['.devenv', self._project, 'bin'],
+                                         'python-site-packages': ['.devenv', self._project, 'lib', 'python27', 'site-packages'],
+                                         'dependency-lib': ['.devenv', self._project, 'dependencies']},
+                                  win32={'bin': ['.devenv', self._project, 'Scripts'],
+                                         'python-site-packages': ['.devenv', self._project, 'Lib', 'site-packages'],
+                                         'dependency-lib': ['.devenv', self._project, 'dependencies']},)
 
     def install_packages(self):
-        libs_dir = os.path.join('.devenv', self._project, 'dependencies')
         self._update_package_with_install_path()
 
         for p in self._packages.archive_packages():
@@ -20,16 +27,42 @@ class ArchiveInstaller:
             else:
                 if p['install_from_ext'] == 'zip':
                     with ZipFile(p['install_from'], 'r') as archive:
-                        archive.extractall(os.path.join(libs_dir, p['name']))
+                        self._extract(archive, p)
                 elif p['install_from_ext'] == 'tar.gz':
                     with TarFile.open(p['install_from'], 'r:gz') as archive:
-                        archive.extractall(os.path.join(libs_dir, p['name']))
+                        self._extract(archive, p)
                 elif p['install_from_ext'] == 'tar.bz2':
                     with TarFile.open(p['install_from'], 'r:bz2') as archive:
-                        archive.extractall(os.path.join(libs_dir, p['name']))
+                        self._extract(archive, p)
                 elif p['install_from_ext'] == 'gz':
                     with gzip.open(p['install_from'], 'r') as archive:
-                        archive.extractall(os.path.join(libs_dir, p['name']))
+                        self._extract(archive, p)
+
+    def _extract(self, archive, p):
+        if p['destination'] == 'dependency-lib':
+            destination_dir = os.path.join(*self._path_mapping[sys.platform]['dependency-lib'])
+            archive.extractall(os.path.join(destination_dir, p['name']))
+        else:
+            if p['destination'] == 'bin':
+                destination_dir = os.path.join(*self._path_mapping[sys.platform]['bin'])
+                self._extract_all_stripping_parent_directory(destination_dir, p, archive)
+            if p['destination'] == 'python-site-packages':
+                destination_dir = os.path.join(*self._path_mapping[sys.platform]['python-site-packages'])
+                self._extract_all_stripping_parent_directory(os.path.join(destination_dir, p['name']), p, archive)
+
+    def _extract_all_stripping_parent_directory(self, destination_dir, p, archive):
+        if p['install_from_ext'] == 'zip':
+            members = archive.infolist()
+            for member in members:
+                param, value = member.filename.split(os.pathsep, 1)
+                member.filename = value
+            archive.extractall(destination_dir, members=members)
+        elif p['install_from_ext'] == 'tar.gz' or p['install_from_ext'] == 'tar.bz2':
+            members = archive.getmembers()
+            for member in members:
+                param, value = member.name.split(os.pathsep, 1)
+                member.name = value
+            archive.extractall(destination_dir, members=members)
 
     def _update_package_with_install_path(self, supported_extensions=['zip', 'tar.gz', 'tar.bz2', '.gz']):
         for p in self._packages.archive_packages():
