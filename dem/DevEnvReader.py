@@ -1,5 +1,6 @@
 import yaml
 import sys, os
+import platform
 
 class Config:
     def __init__(self, dictionary={}):
@@ -59,9 +60,53 @@ def _reformat_versions(packages):
 
 
 def _fixup_remote_locations(config):
+    if 'remote_locations' not in config:
+        config['remote_locations'] = []
     if 'remote_locations' in config and not isinstance(config['remote_locations'], list):
         config['remote_locations'] = [config['remote_locations']]
+    _add_additional_search_locations_based_on_platform(config)
 
+def _add_additional_search_locations_based_on_platform(config):
+    (os_short, arch) = _os_info()
+    remote_locations = config['remote_locations'][:]
+    for location in remote_locations:
+        config['remote_locations'].insert(config['remote_locations'].index(location), os.path.join(location, os_short, arch))
+        config['remote_locations'].insert(config['remote_locations'].index(location), os.path.join(location, os_short))
+
+    _add_additional_search_locations_based_on_centos_or_rhel(config)
+
+
+def _add_additional_search_locations_based_on_centos_or_rhel(config):
+    (os_short, arch) = _os_info()
+    os_short_original = os_short
+    if os_short.startswith('centos'):
+        os_short = os_short.replace('centos', 'rhel')
+    elif os_short.startswith('rhel'):
+        os_short = os_short.replace('rhel', 'centos')
+    else:
+        return
+    remote_locations = config['remote_locations'][:]
+    for location in remote_locations:
+        if os_short_original in location:
+            replace_location = location.replace(os_short_original, os_short)
+            config['remote_locations'].insert(config['remote_locations'].index(location) + 1, replace_location)
+
+
+def _os_info():
+    if _is_linux():
+        (os_short, version_long, label) = platform.linux_distribution(full_name=False)
+        return (os_short.lower() +  version_long.split('.')[0], _arch())
+    else:
+        return ('win32', _arch())
+
+def _arch():
+    if platform.machine().lower() == 'amd64':
+        return 'x86_64'
+    else:
+        return 'i386'
+
+def _is_linux():
+    return sys.platform.lower() == 'linux'
 
 def _add_names(packages):
     for key in packages.keys():
