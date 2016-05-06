@@ -118,6 +118,13 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertEquals(packages['git-python']['type'], 'python')
         self.assertEquals(packages['x11']['type'], 'rpm')
 
+    def test_willReadListOfRepositoryLocations(self):
+        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
+
+        (config, packages) = reader.devenv_from_file('devenv.yaml')
+
+        self.assertEquals(config['remote_locations'], ['/opt', 'http://github.com'])
+
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
     @patch('platform.machine', MagicMock(return_value=('i386')))
@@ -157,8 +164,16 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
 
         (config, packages) = reader.devenv_from_file('devenv.yaml')
 
-        self.assertEquals(config['remote_locations'], [os.path.join('/opt', 'win32', 'x86_64'), os.path.join('/opt', 'win32'), '/opt',
-                                                       os.path.join('http://github.com', 'win32', 'x86_64'), os.path.join('http://github.com', 'win32'), 'http://github.com'])
+        self.assertEquals(config['remote_locations'],
+                          [os.path.join('/opt', 'win32', 'x86_64'), os.path.join('/opt', 'win32'), '/opt',
+                           os.path.join('http://github.com', 'win32', 'x86_64'),
+                           os.path.join('http://github.com', 'win32'), 'http://github.com'])
+
+
+def test_will_exit_if_yaml_file_does_not_exist(self):
+        with self.assertRaises(SystemExit):
+            reader.devenv_from_file('unknown.yaml')
+
 
 
 if __name__ == '__main__':

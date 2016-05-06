@@ -1,7 +1,5 @@
-import os
-
 import yaml
-import sys
+import sys, os
 import platform
 
 class Config:
@@ -110,6 +108,10 @@ def _add_names(packages):
 
 
 def devenv_from_file(devenv_file_path):
+    if not os.path.exists(devenv_file_path):
+        print('Error: {} does not exists'.format(devenv_file_path))
+        sys.exit(1)
+
     with open(devenv_file_path, 'r') as f:
         devenv = yaml.load(f)
     packages = {}
