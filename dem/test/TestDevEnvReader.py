@@ -19,8 +19,10 @@ packages:
         type: archive
     Which:
         type: perl
+        destination: 'bin'
     git-python:
         type: python
+        destination: 'python-site-packages'
     x11:
         version: latest
         type: rpm
@@ -120,6 +122,18 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertEquals(packages['Which']['type'], 'perl')
         self.assertEquals(packages['git-python']['type'], 'python')
         self.assertEquals(packages['x11']['type'], 'rpm')
+
+    @patch('sys.platform', "win32")
+    def test_willReadTypeFromFile(self):
+        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
+
+        (config, packages) = reader.devenv_from_file('devenv.yaml')
+
+        self.assertEquals(packages['qt']['destination'], 'dependency-lib')
+        self.assertEquals(packages['json']['destination'], 'dependency-lib')
+        self.assertEquals(packages['Which']['destination'], 'bin')
+        self.assertEquals(packages['git-python']['destination'], 'python-site-packages')
+        self.assertEquals(packages['x11']['destination'], 'dependency-lib')
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))

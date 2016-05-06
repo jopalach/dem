@@ -52,6 +52,8 @@ def _auto_populate_missing_fields(packages):
     for p in packages.values():
         if 'version' not in p:
             p['version'] = 'latest'
+        if 'destination' not in p:
+            p['destination'] = 'dependency-lib'
 
 
 def _reformat_versions(packages):
