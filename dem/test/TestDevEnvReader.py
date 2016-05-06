@@ -85,6 +85,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
     def setUp(self):
         self.setUpPyfakefs()
 
+    @patch('sys.platform', "win32")
     def test_willReadPackagesFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
 
@@ -96,6 +97,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertNotEquals(packages['git-python'], None)
         self.assertNotEquals(packages['x11'], None)
 
+    @patch('sys.platform', "win32")
     def test_willReadVersionFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
 
@@ -107,6 +109,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertEquals(packages['git-python']['version'], 'latest')
         self.assertEquals(packages['x11']['version'], 'latest')
 
+    @patch('sys.platform', "win32")
     def test_willReadTypeFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
 
