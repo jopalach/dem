@@ -1,6 +1,6 @@
 import os
 
-import ArchiveInstaller
+from ArchiveInstaller import ArchiveInstaller
 import DevEnvReader as reader
 from EnvironmentBuilder import EnvironmentBuilder
 from RpmInstaller import RpmInstaller
@@ -10,7 +10,7 @@ def get_dem_packages(project):
 
     EnvironmentBuilder.build(project)
 
-    archive_installer = ArchiveInstaller.ArchiveInstaller(project, config, packages)
+    archive_installer = ArchiveInstaller(project, config, packages)
     archive_installer.install_packages()
 
     rpm_installer = RpmInstaller(project, config, packages.rpm_packages())
