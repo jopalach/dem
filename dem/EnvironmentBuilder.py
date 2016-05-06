@@ -2,15 +2,13 @@ import os
 import virtualenv
 
 
-def create_dem_env():
-    dem_env = os.path.join(os.getcwd(), 'demenv')
-    python_dir = os.path.join(dem_env, 'python')
-    dependencies_dir = os.path.join(dem_env, 'libs')
+class EnvironmentBuilder(object):
+    @staticmethod
+    def create(project):
+        env_dir = os.path.join(os.getcwd(), '.devenv')
+        project_dir = os.path.join(env_dir, project)
+        deps_dir = os.path.join(project_dir, 'dependencies')
 
-    os.makedirs(python_dir)
-    os.makedirs(dependencies_dir)
-
-    virtualenv.create_environment(python_dir)
-
-
-
+        os.makedirs(project_dir)
+        virtualenv.create_environment(project_dir)
+        os.makedirs(deps_dir)
