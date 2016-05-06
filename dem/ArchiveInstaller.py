@@ -53,15 +53,21 @@ class ArchiveInstaller:
     def _extract_all_stripping_parent_directory(self, destination_dir, p, archive):
         if p['install_from_ext'] == 'zip':
             members = archive.infolist()
-            for member in members:
-                param, value = member.filename.split(os.pathsep, 1)
-                member.filename = value
+            for member in reversed(members):
+                if '/' in member.filename:
+                    value = member.filename.split('/', 1)[1]
+                    member.filename = value
+                else:
+                    members.remove(member)
             archive.extractall(destination_dir, members=members)
         elif p['install_from_ext'] == 'tar.gz' or p['install_from_ext'] == 'tar.bz2':
             members = archive.getmembers()
-            for member in members:
-                param, value = member.name.split(os.pathsep, 1)
-                member.name = value
+            for member in reversed(members):
+                if '/' in member.name:
+                    value = member.name.split('/', 1)[1]
+                    member.name = value
+                else:
+                    members.remove(member)
             archive.extractall(destination_dir, members=members)
 
     def _update_package_with_install_path(self, supported_extensions=['zip', 'tar.gz', 'tar.bz2', '.gz']):

@@ -223,7 +223,6 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
 
     @patch('sys.platform', "win32")
-    @patch('os.pathsep', "/")
     def test_willUnzipToBinaryDestinationWindowsStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -247,7 +246,6 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
-    @patch('os.pathsep', "/")
     def test_willUnzipToBinaryDestinationLinuxStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -266,12 +264,10 @@ class MyDem(fake_filesystem_unittest.TestCase):
             myzip.write(os.path.join('json', 'eggs.exe'))
 
         go.get_dem_packages(self.project)
-
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'bin', 'eggs.exe')))
 
 
     @patch('sys.platform', "win32")
-    @patch('os.pathsep', "/")
     def test_willUnzipToPythonSitePackagesDestinationWindowsStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -296,7 +292,6 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
-    @patch('os.pathsep', "/")
     def test_willUnzipToPythonSitePackagesDestinationLinuxStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
