@@ -1,9 +1,10 @@
 import os
 
-from ArchiveInstaller import ArchiveInstaller
-import DevEnvReader as reader
-from EnvironmentBuilder import EnvironmentBuilder
-from RpmInstaller import RpmInstaller
+from .ArchiveInstaller import ArchiveInstaller
+from . import DevEnvReader as reader
+from .EnvironmentBuilder import EnvironmentBuilder
+from .RpmInstaller import RpmInstaller
+
 
 def get_dem_packages(project):
     (config, packages) = reader.devenv_from_file('devenv.yaml')
