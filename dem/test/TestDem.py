@@ -208,13 +208,13 @@ class MyDem(fake_filesystem_unittest.TestCase):
                     remote_locations: ''' + remote_location + '''
                 packages-win32:
                     json:
-                        version: 1.8
+                        version: msvc2015-1.8
                         type: archive''')
         os.makedirs(remote_location)
         self.fs.CreateFile('eggs.txt', contents='''
                 I like my eggs runny.''')
 
-        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+        with ZipFile(os.path.join(remote_location, 'json-msvc2015-1.8.zip'), 'w') as myzip:
             myzip.write('eggs.txt')
 
         go.get_dem_packages(self.project)
