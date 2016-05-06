@@ -71,7 +71,7 @@ packages:
     qt:
         version: 4.8.6
         type: rpm
-packages-windows:
+packages-win32:
     json:
         version: 1.8
         type: archive
@@ -131,7 +131,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
 
         self.assertEquals(config['remote_locations'], ['/opt'])
 
-    @patch('platform.system', MagicMock(return_value="linux"))
+    @patch('sys.platform', "linux")
     def test_willReadLinuxPackagesFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_LINUX_AND_ALL_PACKAGES)
 
@@ -141,7 +141,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertNotEquals(packages['json'], None)
         self.assertNotEquals(packages['Which'], None)
 
-    @patch('platform.system', MagicMock(return_value="windows"))
+    @patch('sys.platform', "win32")
     def test_willReadWindowsPackagesFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_WINDOWS_AND_ALL_PACKAGES)
 

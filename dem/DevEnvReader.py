@@ -1,5 +1,5 @@
 import yaml
-import platform
+import sys
 
 class Config:
     def __init__(self, dictionary={}):
@@ -71,7 +71,7 @@ def devenv_from_file(devenv_file_path):
     if devenv is not None and 'packages' in devenv:
         packages = devenv['packages']
 
-    os_packages = "packages-{}".format(platform.system().lower())
+    os_packages = "packages-{}".format(sys.platform.lower())
     if devenv is not None and os_packages in devenv:
         packages.update(devenv[os_packages])
     _auto_populate_missing_fields(packages)

@@ -131,7 +131,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertTrue(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
 
-    @patch('platform.system', MagicMock(return_value="Windows"))
+    @patch('sys.platform', "win32")
     def test_willNotInstallLinuxPackagesForWindowsOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -152,13 +152,13 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertFalse(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
 
-    @patch('platform.system', MagicMock(return_value="Linux"))
+    @patch('sys.platform', "linux")
     def test_willNotInstallWindowsPackagesForLinuxOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
                 config:
                     remote_locations: ''' + remote_location + '''
-                packages-windows:
+                packages-win32:
                     json:
                         version: 1.8
                         type: archive''')
@@ -173,8 +173,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertFalse(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
 
-
-    @patch('platform.system', MagicMock(return_value="Linux"))
+    @patch('sys.platform', "linux")
     def test_willInstallLinuxPackagesForLinuxOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -195,14 +194,13 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertTrue(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
 
-
-    @patch('platform.system', MagicMock(return_value="Windows"))
+    @patch('sys.platform', "win32")
     def test_willInstallWindowsPackagesForWindowsOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
                 config:
                     remote_locations: ''' + remote_location + '''
-                packages-windows:
+                packages-win32:
                     json:
                         version: 1.8
                         type: archive''')
