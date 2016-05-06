@@ -1,3 +1,4 @@
+import os
 import unittest
 import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
 from mock import patch, MagicMock
@@ -117,21 +118,19 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertEquals(packages['git-python']['type'], 'python')
         self.assertEquals(packages['x11']['type'], 'rpm')
 
-    def test_willReadListOfRepositoryLocations(self):
-        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
-
-        (config, packages) = reader.devenv_from_file('devenv.yaml')
-
-        self.assertEquals(config['remote_locations'], ['/opt', 'http://github.com'])
-
-    def test_willInterpretSingleRemoteLocationAsList(self):
+    @patch('sys.platform', "linux")
+    @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
+    @patch('platform.machine', MagicMock(return_value=('i386')))
+    def test_willInterpretSingleRemoteLocationAsListWithOSSearchesAdded(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_ONLY_ONE_REMOTE_LOCATION)
 
         (config, packages) = reader.devenv_from_file('devenv.yaml')
 
-        self.assertEquals(config['remote_locations'], ['/opt'])
+        self.assertEquals(config['remote_locations'], [os.path.join('/opt', 'centos7', 'i386'), os.path.join('/opt', 'rhel7', 'i386'), os.path.join('/opt', 'centos7'), os.path.join('/opt', 'rhel7'), '/opt'])
 
     @patch('sys.platform', "linux")
+    @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
+    @patch('platform.machine', MagicMock(return_value=('i386')))
     def test_willReadLinuxPackagesFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_LINUX_AND_ALL_PACKAGES)
 
@@ -150,6 +149,16 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertNotEquals(packages['qt'], None)
         self.assertNotEquals(packages['json'], None)
         self.assertNotEquals(packages['Which'], None)
+
+    @patch('sys.platform', "win32")
+    @patch('platform.machine', MagicMock(return_value=('amd64')))
+    def test_wilAddSearchPathsBasedOnWindowsAndArch(self):
+        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
+
+        (config, packages) = reader.devenv_from_file('devenv.yaml')
+
+        self.assertEquals(config['remote_locations'], [os.path.join('/opt', 'win32', 'x86_64'), os.path.join('/opt', 'win32'), '/opt',
+                                                       os.path.join('http://github.com', 'win32', 'x86_64'), os.path.join('http://github.com', 'win32'), 'http://github.com'])
 
 
 if __name__ == '__main__':

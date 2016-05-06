@@ -153,6 +153,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
 
     @patch('sys.platform', "linux")
+    @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
     def test_willNotInstallWindowsPackagesForLinuxOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -174,6 +175,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join('devenv', 'libs', 'json', 'eggs.txt')))
 
     @patch('sys.platform', "linux")
+    @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
     def test_willInstallLinuxPackagesForLinuxOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
