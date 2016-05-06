@@ -3,8 +3,8 @@ import mock
 from dem.RpmInstaller import RpmInstaller
 from dem.DevEnvReader import Config
 
-class MyTestCase(unittest.TestCase):
 
+class MyTestCase(unittest.TestCase):
     @mock.patch('os.path.join')
     @mock.patch('os.path.exists')
     @mock.patch('subprocess.call')
@@ -46,7 +46,6 @@ class MyTestCase(unittest.TestCase):
         installer.install_packages()
 
         mock_subprocess.assert_called_once_with(['sudo', 'yum', 'install', 'package-1.3.0', '-y'])
-
 
     @mock.patch('os.path.join')
     @mock.patch('os.path.exists')

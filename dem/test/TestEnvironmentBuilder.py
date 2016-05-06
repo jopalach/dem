@@ -1,8 +1,6 @@
 import os
 import unittest, mock
 import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
-import pyfakefs.fake_filesystem_shutil as fake_shutil
-
 from dem.EnvironmentBuilder import EnvironmentBuilder
 
 

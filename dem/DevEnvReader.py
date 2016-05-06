@@ -47,6 +47,7 @@ class Packages:
                 packages.append(p)
         return packages
 
+
 def _auto_populate_missing_fields(packages):
     for p in packages.values():
         if 'version' not in p:
@@ -65,6 +66,7 @@ def _fixup_remote_locations(config):
     if 'remote_locations' in config and not isinstance(config['remote_locations'], list):
         config['remote_locations'] = [config['remote_locations']]
     _add_additional_search_locations_based_on_platform(config)
+
 
 def _add_additional_search_locations_based_on_platform(config):
     (os_short, arch) = _os_info()
@@ -99,14 +101,17 @@ def _os_info():
     else:
         return ('win32', _arch())
 
+
 def _arch():
     if platform.machine().lower() == 'amd64':
         return 'x86_64'
     else:
         return 'i386'
 
+
 def _is_linux():
     return sys.platform.lower() == 'linux'
+
 
 def _add_names(packages):
     for key in packages.keys():

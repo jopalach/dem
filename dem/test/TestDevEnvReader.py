@@ -118,7 +118,6 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertEquals(packages['git-python']['type'], 'python')
         self.assertEquals(packages['x11']['type'], 'rpm')
 
-
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
     @patch('platform.machine', MagicMock(return_value=('i386')))
