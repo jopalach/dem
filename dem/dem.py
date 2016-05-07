@@ -22,13 +22,13 @@ def get_dem_packages(project):
     package_uninstaller = PackageUninstaller(cache, packages)
     package_uninstaller.uninstall_changed_packages()
 
-    archive_installer = ArchiveInstaller(project, config, packages, cache)
+    archive_installer = ArchiveInstaller(project, config, packages.archive_packages(), cache)
     installed_packages = archive_installer.install_packages()
 
     rpm_installer = RpmInstaller(packages.rpm_packages(), cache)
     installed_packages.extend(rpm_installer.install_packages())
 
-    url_installer = UrlInstaller(project, packages.url_packages())
+    url_installer = UrlInstaller(project, packages.url_packages(), cache)
     installed_packages.extend(url_installer.install_packages())
 
     cache.update(installed_packages)

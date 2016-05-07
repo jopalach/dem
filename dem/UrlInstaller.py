@@ -6,11 +6,12 @@ from . DevEnvReader import Config
 
 
 class UrlInstaller:
-    def __init__(self, project, packages):
+    def __init__(self, project, packages, cache):
         self._packages = packages
         self._project = project
         self._download_directory = os.path.join('.devenv', project, 'downloads')
         self._config = Config({'remote_locations': [self._download_directory]})
+        self._cache = cache
 
     def install_packages(self):
         installed_packages = []
@@ -23,7 +24,7 @@ class UrlInstaller:
                 if not os.path.exists(local_file):
                     wget.download(p['url'], out=local_file)
                     installed_packages.append(p)
-        local_installer = ArchiveInstaller(self._project, self._config, installed_packages)
+        local_installer = ArchiveInstaller(self._project, self._config, installed_packages, self._cache)
         return local_installer.install_packages()
 
     @staticmethod

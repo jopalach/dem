@@ -3,15 +3,17 @@ import unittest
 import mock
 
 from dem.DevEnvReader import Config
+from dem.cache import PackageCache
 from dem.UrlInstaller import UrlInstaller
 
 
 class MyTestCase(unittest.TestCase):
     @mock.patch('wget.download')
     def test_will_get_packages_and_download(self, mock_wget):
+        cache = mock.MagicMock(spec = PackageCache)
         packages = [{'name': 'package', 'version': '1.3.0', 'url': 'http://website.com/something.tar.gz'},
                     {'name': 'package4', 'version': '0.3.0', 'url': 'http://website.com/somethingElse.tar.gz'}]
-        installer = UrlInstaller('myProject', packages)
+        installer = UrlInstaller('myProject', packages, cache)
 
         mock_wget.download.return_value = 'file'
         installer.install_packages()
@@ -24,10 +26,11 @@ class MyTestCase(unittest.TestCase):
     @mock.patch('os.path.exists')
     @mock.patch('wget.download')
     def test_will_not_download_if_exists_in_downloads(self, mock_wget, mock_exists):
+        cache = mock.MagicMock(spec = PackageCache)
         packages = [{'name': 'package', 'version': '1.3.0', 'url': 'http://website.com/something.tar.gz'},
                     {'name': 'package4', 'version': '0.3.0', 'url': 'http://website.com/somethingElse.tar.gz'}]
 
-        installer = UrlInstaller('myProject', packages)
+        installer = UrlInstaller('myProject', packages, cache)
 
         mock_wget.download.return_value = 'file'
         download_file2 = os.path.join('.devenv', 'myProject', 'downloads', 'package4-0.3.0.tar.gz')
