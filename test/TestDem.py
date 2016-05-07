@@ -311,7 +311,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         go.get_dem_packages(self.project)
 
-        self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'lib', 'python27', 'site-packages', 'json', 'eggs.exe')))
+        self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'lib', 'python2.7', 'sitepackages', 'json', 'eggs.exe')))
 
 if __name__ == '__main__':
     unittest.main()

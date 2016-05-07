@@ -12,7 +12,7 @@ class ArchiveInstaller:
         self._packages = packages
         self._project = project
         self._path_mapping = dict(linux={'bin': ['.devenv', self._project, 'bin'],
-                                         'python-site-packages': ['.devenv', self._project, 'lib', 'python27', 'site-packages'],
+                                         'python-site-packages': ['.devenv', self._project, 'lib', 'python2.7', 'sitepackages'],
                                          'dependency-lib': ['.devenv', self._project, 'dependencies']},
                                   win32={'bin': ['.devenv', self._project, 'Scripts'],
                                          'python-site-packages': ['.devenv', self._project, 'Lib', 'site-packages'],
