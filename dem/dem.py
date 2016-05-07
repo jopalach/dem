@@ -4,7 +4,8 @@ from . ArchiveInstaller import ArchiveInstaller
 from . import DevEnvReader as reader
 from . EnvironmentBuilder import EnvironmentBuilder
 from . RpmInstaller import RpmInstaller
-from . PackageCache import PackageCache
+from . cache import PackageCache
+from . uninstaller import PackageUninstaller
 
 def get_dem_packages(project):
     (config, packages) = reader.devenv_from_file('devenv.yaml')
@@ -16,13 +17,16 @@ def get_dem_packages(project):
 
     EnvironmentBuilder.build(project)
 
+    package_uninstaller = PackageUninstaller(cache, packages)
+    package_uninstaller.uninstall_changed_packages()
+
     archive_installer = ArchiveInstaller(project, config, packages)
-    archive_installer.install_packages()
+    installed_packages = archive_installer.install_packages()
 
     rpm_installer = RpmInstaller(packages.rpm_packages())
-    rpm_installer.install_packages()
+    installed_packages.extend(rpm_installer.install_packages())
 
-    cache.update()
+    cache.update(installed_packages)
 
 if __name__ == '__main__':
     project = os.path.basename(os.getcwd())

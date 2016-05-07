@@ -1,9 +1,7 @@
 import gzip
-import os
+import os, sys
 from tarfile import TarFile
 from zipfile import ZipFile
-
-import sys
 
 
 class ArchiveInstaller:
@@ -20,33 +18,43 @@ class ArchiveInstaller:
 
     def install_packages(self):
         self._update_package_with_install_path()
+        installed_packages = []
 
         for p in self._packages.archive_packages():
             if 'install_from' not in p:
                 print("Could not find package: {}, version: {}".format(p['name'], p['version']))
             else:
+                print('[dem] installing {}-{}'.format(p['name'], p['version']))
                 if p['install_from_ext'] == 'zip':
                     with ZipFile(p['install_from'], 'r') as archive:
-                        self._extract(archive, p)
+                        location = self._extract(archive, p)
                 elif p['install_from_ext'] == 'tar.gz':
                     with TarFile.open(p['install_from'], 'r:gz') as archive:
-                        self._extract(archive, p)
+                        location = self._extract(archive, p)
                 elif p['install_from_ext'] == 'tar.bz2':
                     with TarFile.open(p['install_from'], 'r:bz2') as archive:
-                        self._extract(archive, p)
+                        location = self._extract(archive, p)
                 elif p['install_from_ext'] == 'gz':
                     with gzip.open(p['install_from'], 'r') as archive:
-                        self._extract(archive, p)
+                        location = self._extract(archive, p)
+                package = dict()
+                package[p['name']] = {'version': p['version'], 'type': 'local', 'install_location': location}
+                installed_packages.append(package)
+
+        return installed_packages
 
     def _extract(self, archive, p):
         destination_dir = self._platform_destination_path(p['destination'])
         if p['destination'] == 'dependency-lib':
-            archive.extractall(os.path.join(destination_dir, p['name']))
+            destination_dir = os.path.join(destination_dir, p['name'])
+            archive.extractall(destination_dir)
+            return destination_dir
         else:
             if p['destination'] == 'bin':
                 self._extract_all_stripping_parent_directory(destination_dir, p, archive)
             if p['destination'] == 'python-site-packages':
                 self._extract_all_stripping_parent_directory(os.path.join(destination_dir, p['name']), p, archive)
+            return ''
 
     def _extract_all_stripping_parent_directory(self, destination_dir, p, archive):
         if p['install_from_ext'] == 'zip':

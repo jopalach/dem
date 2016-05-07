@@ -4,7 +4,7 @@ import hashlib
 import json
 import os
 
-from dem.PackageCache import PackageCache
+from dem.cache import PackageCache
 
 SAMPLE_YAML_CONTENT = '''
 config:
@@ -51,7 +51,7 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
         self.fs.CreateFile(os.path.join('base_path', 'devenv.yaml'), contents=SAMPLE_YAML_CONTENT)
 
         cache = PackageCache(os.path.abspath('base_path'))
-        cache.update()
+        cache.update([])
 
         hasher = hashlib.md5()
         hasher.update(SAMPLE_YAML_CONTENT.encode('utf-8'))

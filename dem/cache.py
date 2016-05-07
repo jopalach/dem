@@ -7,7 +7,9 @@ BLOCKSIZE = 65536
 class PackageCache(object):
     def __init__(self, base_path):
         self._yaml_file = os.path.join(base_path, 'devenv.yaml')
-        self._cache_file = os.path.join(base_path, '.devenv', 'cache.json')
+        self._base = base_path
+        self._devenv = os.path.join(base_path, '.devenv')
+        self._cache_file = os.path.join(self._devenv, 'cache.json')
 
     def needs_update(self):
         if os.path.exists(self._cache_file):
@@ -15,15 +17,34 @@ class PackageCache(object):
                 return False
         return True
 
-    def update(self):
-        self._update_hash()
-
-    def _update_hash(self):
+    def update(self, installed_packages):
         digest = self._hash_yaml()
         data = self._cache_data()
         data['md5'] = digest
+        packages = {}
+        for p in installed_packages:
+            for name, info in p.items():
+                packages[name] = info
+        data['packages'] = packages
         with open(self._cache_file, 'w+') as f:
             json.dump(data, f)
+
+    def local_installed_packages(self):
+        installed_packages = {}
+        packages = self._cache_data().get('packages', {})
+        for name, info in packages.items():
+            type = info.get('type', None)
+            if type == 'local':
+                installed_packages[name] = info
+        return installed_packages
+
+    def install_location(self, name):
+        data = self._cache_data().get('packages', {})
+        location = data.get(name, {}).get('install_location', None)
+        if location:
+            location = location.replace('/', os.sep)
+            return os.path.join(self._base, location)
+        return None
 
     def _hash_yaml(self):
         hasher = hashlib.md5()
