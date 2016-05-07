@@ -10,6 +10,7 @@ __pycache__/
 .Python
 env/
 env3/
+.devenv
 build/
 develop-eggs/
 dist/
