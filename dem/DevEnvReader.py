@@ -105,14 +105,14 @@ def _os_info():
 
 
 def _arch():
-    if platform.machine().lower() == 'amd64':
+    if platform.machine().lower() == 'amd64' or platform.machine().lower() == "x86_64":
         return 'x86_64'
     else:
         return 'i386'
 
 
 def _is_linux():
-    return sys.platform.lower() == 'linux'
+    return sys.platform.startswith('linux')
 
 
 def _add_names(packages):
@@ -132,7 +132,7 @@ def devenv_from_file(devenv_file_path):
     if devenv is not None and 'packages' in devenv:
         packages = devenv['packages']
 
-    os_packages = "packages-{}".format(sys.platform.lower())
+    os_packages = "packages-{}".format(_platform())
     if devenv is not None and os_packages in devenv:
         packages.update(devenv[os_packages])
     _auto_populate_missing_fields(packages)
@@ -145,3 +145,9 @@ def devenv_from_file(devenv_file_path):
     _fixup_remote_locations(config)
 
     return Config(config), Packages(packages)
+
+
+def _platform():
+    if sys.platform.startswith("linux"):
+        return "linux"
+    return "win32"
