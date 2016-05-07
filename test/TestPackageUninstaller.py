@@ -59,6 +59,7 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
 
         self.setup_directories()
 
+    @mock.patch('sys.platform', "win32")
     @mock.patch('subprocess.call')
     def test_will_remove_archive_packages_that_have_changed(self, mock_subprocess):
         self.setup_files(SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
@@ -72,6 +73,7 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
 
         self.assertFalse(os.path.exists(os.path.join(self._deps, 'json')))
 
+    @mock.patch('sys.platform', "win32")
     @mock.patch('subprocess.call')
     def test_will_remove_archive_packages_that_have_been_removed(self, mock_subprocess):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
@@ -85,6 +87,7 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
 
         self.assertFalse(os.path.exists(os.path.join(self._deps, 'json')))
 
+    @mock.patch('sys.platform', "win32")
     @mock.patch('subprocess.call')
     def test_will_call_yum_for_removed_system_packages(self, mock_subprocess):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
