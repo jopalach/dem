@@ -1,11 +1,14 @@
 import os
 
+
 from . ArchiveInstaller import ArchiveInstaller
 from . import DevEnvReader as reader
 from . EnvironmentBuilder import EnvironmentBuilder
 from . RpmInstaller import RpmInstaller
 from . cache import PackageCache
 from . uninstaller import PackageUninstaller
+from . UrlInstaller import UrlInstaller
+
 
 def get_dem_packages(project):
     (config, packages) = reader.devenv_from_file('devenv.yaml')
@@ -20,11 +23,14 @@ def get_dem_packages(project):
     package_uninstaller = PackageUninstaller(cache, packages)
     package_uninstaller.uninstall_changed_packages()
 
-    archive_installer = ArchiveInstaller(project, config, packages)
+    archive_installer = ArchiveInstaller(project, config, packages.archive_packages())
     installed_packages = archive_installer.install_packages()
 
     rpm_installer = RpmInstaller(packages.rpm_packages())
     installed_packages.extend(rpm_installer.install_packages())
+
+    url_installer = UrlInstaller(project, packages.url_packages())
+    installed_packages.extend(url_installer.install_packages())
 
     cache.update(installed_packages)
 

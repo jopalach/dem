@@ -183,6 +183,5 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         with self.assertRaises(SystemExit):
             reader.devenv_from_file('unknown.yaml')
 
-
 if __name__ == '__main__':
     unittest.main()
