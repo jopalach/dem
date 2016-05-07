@@ -1,9 +1,9 @@
 import os
 
-from dem.ArchiveInstaller import ArchiveInstaller
-import dem.DevEnvReader as reader
-from dem.EnvironmentBuilder import EnvironmentBuilder
-from dem.RpmInstaller import RpmInstaller
+from . ArchiveInstaller import ArchiveInstaller
+from . import DevEnvReader as reader
+from . EnvironmentBuilder import EnvironmentBuilder
+from . RpmInstaller import RpmInstaller
 
 
 def get_dem_packages(project):
