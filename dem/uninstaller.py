@@ -19,7 +19,7 @@ class PackageUninstaller(object):
     def _packages_to_remove(self, installed_packages):
         packages_to_remove = []
         for name, info in installed_packages.items():
-            if name not in self._packages.values():
+            if not self._packages.contains_package(name):
                 packages_to_remove.append((name, info['version']))
             else:
                 package_in_yaml = self._packages[name]

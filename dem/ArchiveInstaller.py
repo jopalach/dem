@@ -5,10 +5,11 @@ from zipfile import ZipFile
 
 
 class ArchiveInstaller:
-    def __init__(self, project, config, packages):
+    def __init__(self, project, config, packages, cache):
         self._config = config
         self._packages = packages
         self._project = project
+        self._cache = cache
         self._path_mapping = dict(linux={'bin': ['.devenv', self._project, 'bin'],
                                          'python-site-packages': ['.devenv', self._project, 'lib', 'python2.7', 'sitepackages'],
                                          'dependency-lib': ['.devenv', self._project, 'dependencies']},
@@ -24,19 +25,23 @@ class ArchiveInstaller:
             if 'install_from' not in p:
                 print("Could not find package: {}, version: {}".format(p['name'], p['version']))
             else:
-                print('[dem] installing {}-{}'.format(p['name'], p['version']))
-                if p['install_from_ext'] == 'zip':
-                    with ZipFile(p['install_from'], 'r') as archive:
-                        location = self._extract(archive, p)
-                elif p['install_from_ext'] == 'tar.gz':
-                    with TarFile.open(p['install_from'], 'r:gz') as archive:
-                        location = self._extract(archive, p)
-                elif p['install_from_ext'] == 'tar.bz2':
-                    with TarFile.open(p['install_from'], 'r:bz2') as archive:
-                        location = self._extract(archive, p)
-                elif p['install_from_ext'] == 'gz':
-                    with gzip.open(p['install_from'], 'r') as archive:
-                        location = self._extract(archive, p)
+                if not self._cache.is_package_installed(p['name'], p['version']):
+                    print('[dem] installing {}-{}'.format(p['name'], p['version']))
+                    if p['install_from_ext'] == 'zip':
+                        with ZipFile(p['install_from'], 'r') as archive:
+                            location = self._extract(archive, p)
+                    elif p['install_from_ext'] == 'tar.gz':
+                        with TarFile.open(p['install_from'], 'r:gz') as archive:
+                            location = self._extract(archive, p)
+                    elif p['install_from_ext'] == 'tar.bz2':
+                        with TarFile.open(p['install_from'], 'r:bz2') as archive:
+                            location = self._extract(archive, p)
+                    elif p['install_from_ext'] == 'gz':
+                        with gzip.open(p['install_from'], 'r') as archive:
+                            location = self._extract(archive, p)
+                else:
+                    print('[dem] {}-{} already installed'.format(p['name'], p['version']))
+                    location = self._cache.install_location(p['name'])
                 package = dict()
                 package[p['name']] = {'version': p['version'], 'type': 'local', 'install_location': location}
                 installed_packages.append(package)
