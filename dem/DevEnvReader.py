@@ -126,7 +126,10 @@ def devenv_from_file(devenv_file_path):
         sys.exit(1)
 
     with open(devenv_file_path, 'r') as f:
-        devenv = yaml.load(f)
+        try:
+            devenv = yaml.load(f)
+        except yaml.YAMLError as exc:
+            _exit_and_show_error(f, exc)
     packages = {}
 
     if devenv is not None and 'packages' in devenv:
@@ -145,6 +148,22 @@ def devenv_from_file(devenv_file_path):
     _fixup_remote_locations(config)
 
     return Config(config), Packages(packages)
+
+
+def _exit_and_show_error(f, exc):
+    # http://stackoverflow.com/questions/30269723/how-to-get-details-from-pyyaml-exception
+    print ("Error while parsing YAML file: {}".format(f.name))
+    if hasattr(exc, 'problem_mark'):
+        if exc.context != None:
+            print ('  parser says\n' + str(exc.problem_mark) + '\n  ' +
+                   str(exc.problem) + ' ' + str(exc.context) +
+                   '\nPlease correct data and retry.')
+        else:
+            print ('  parser says\n' + str(exc.problem_mark) + '\n  ' +
+                   str(exc.problem) + '\nPlease correct data and retry.')
+    else:
+        print ("Something went wrong while parsing yaml file")
+    sys.exit(1)
 
 
 def _platform():
