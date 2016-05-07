@@ -290,7 +290,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'Lib', 'site-packages', 'json', 'eggs.exe')))
 
 
-    @patch('sys.platform', "linux")
+    @patch('sys.platform', "linux2")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
     def test_willUnzipToPythonSitePackagesDestinationLinuxStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
