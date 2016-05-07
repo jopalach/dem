@@ -5,12 +5,11 @@ import virtualenv
 class EnvironmentBuilder(object):
     @staticmethod
     def build(project):
-        env_dir = os.path.join(os.getcwd(), '.devenv', project)
-        if os.path.exists(env_dir):
+        project_dir = os.path.join(os.getcwd(), '.devenv', project)
+        if os.path.exists(project_dir):
             return
 
         print('[dem] building environment')
-        project_dir = os.path.join(env_dir, project)
         deps_dir = os.path.join(project_dir, 'dependencies')
 
         os.makedirs(project_dir)

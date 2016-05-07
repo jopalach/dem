@@ -83,7 +83,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         go.get_dem_packages(self.project)
 
-        self.assertEquals(mock_stdout.getvalue(), 'Could not find package: json, version: 1.8\n')
+        self.assertTrue('Could not find package: json, version: 1.8\n' in mock_stdout.getvalue())
 
     @patch('sys.platform', "win32")
     def test_willInstallFirstPackageFound(self):
