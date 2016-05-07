@@ -21,7 +21,7 @@ class ArchiveInstaller:
         self._update_package_with_install_path()
         installed_packages = []
 
-        for p in self._packages.archive_packages():
+        for p in self._packages:
             if 'install_from' not in p:
                 print("Could not find package: {}, version: {}".format(p['name'], p['version']))
             else:
@@ -82,7 +82,7 @@ class ArchiveInstaller:
             archive.extractall(destination_dir, members=members)
 
     def _update_package_with_install_path(self, supported_extensions=['zip', 'tar.gz', 'tar.bz2', '.gz']):
-        for p in self._packages.archive_packages():
+        for p in self._packages:
             for remote_location in self._config.remote_locations():
                 for extension in supported_extensions:
                     package_file = "{}-{}.{}".format(os.path.join(remote_location, p['name']), p['version'], extension)

@@ -291,6 +291,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
 
     @patch('sys.platform', "linux2")
+    @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
     def test_willUnzipToPythonSitePackagesDestinationLinuxStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -312,6 +313,34 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'lib', 'python2.7', 'sitepackages', 'json', 'eggs.exe')))
 
+    @patch('sys.platform', "win32")
+    @patch('wget.download')
+    def test_willDownloadUrlToPythonSitePackagesDestinationWindowsStrippingParentDirectory(self, mock_wget):
+        self.fs.CreateFile('devenv.yaml', contents='''
+                config:
+                packages:
+                    qtcwatchdog:
+                        version: 1.0.1
+                        type: url
+                        url: https://github.com/ismacaulay/qtcwatchdog/archive/v1.0.1.zip
+                        destination: python-site-packages''')
+
+        def wget_side_effect(url, out):
+            remote_location = os.path.join('.devenv', self.project, 'downloads')
+            os.makedirs(remote_location)
+            self.fs.CreateFile(os.path.join('qtcwatchdog', 'qtc.py'), contents='''
+                       I like my eggs runny.''')
+
+            with ZipFile(os.path.join(remote_location, 'qtcwatchdog-1.0.1.zip'), 'w') as myzip:
+                myzip.write(os.path.join('qtcwatchdog', 'qtc.py'))
+
+        mock_wget.side_effect = wget_side_effect
+        go.get_dem_packages(self.project)
+
+        self.assertTrue(
+            os.path.exists(os.path.join('.devenv', self.project, 'Lib', 'site-packages', 'qtcwatchdog')))
+        self.assertTrue(
+            os.path.exists(os.path.join('.devenv', self.project, 'Lib', 'site-packages', 'qtcwatchdog', 'qtc.py')))
 
     @patch('sys.platform', "win32")
     @patch('sys.stdout', new_callable=StringIO)

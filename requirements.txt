@@ -2,4 +2,5 @@ pyfakefs
 mock
 virtualenv
 PyYaml
+wget
 nose

@@ -6,6 +6,8 @@ from . EnvironmentBuilder import EnvironmentBuilder
 from . RpmInstaller import RpmInstaller
 from . cache import PackageCache
 from . uninstaller import PackageUninstaller
+from . UrlInstaller import UrlInstaller
+
 
 def get_dem_packages(project):
     (config, packages) = reader.devenv_from_file('devenv.yaml')
@@ -25,6 +27,9 @@ def get_dem_packages(project):
 
     rpm_installer = RpmInstaller(packages.rpm_packages(), cache)
     installed_packages.extend(rpm_installer.install_packages())
+
+    url_installer = UrlInstaller(project, packages.url_packages())
+    installed_packages.extend(url_installer.install_packages())
 
     cache.update(installed_packages)
 

@@ -46,6 +46,9 @@ class Packages:
     def rpm_packages(self):
         return self._all_packages_of_type('rpm')
 
+    def url_packages(self):
+        return self._all_packages_of_type('url')
+
     def _all_packages_of_type(self, type):
         packages = []
         for p in self._packages.values():
@@ -69,6 +72,8 @@ def _reformat_versions(packages):
 
 
 def _fixup_remote_locations(config):
+    if config is None:
+        config = {}
     if 'remote_locations' not in config:
         config['remote_locations'] = []
     if 'remote_locations' in config and not isinstance(config['remote_locations'], list):
@@ -151,6 +156,7 @@ def devenv_from_file(devenv_file_path):
     config = {}
     if devenv is not None and 'config' in devenv:
         config = devenv['config']
+
     _fixup_remote_locations(config)
 
     return Config(config), Packages(packages)
