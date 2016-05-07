@@ -29,6 +29,10 @@ class PackageCache(object):
         with open(self._cache_file, 'w+') as f:
             json.dump(data, f)
 
+    def is_package_installed(self, name, version):
+        data = self._cache_data().get('packages', {})
+        return name in data and data[name].get('version', '') == version
+
     def local_installed_packages(self):
         return self._packages_of_type('local')
 

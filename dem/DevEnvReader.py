@@ -34,6 +34,12 @@ class Packages:
     def values(self):
         return self._packages.values()
 
+    def contains_package(self, name):
+        for p in self._packages.values():
+            if p['name'] == name:
+                return True
+        return False
+
     def archive_packages(self):
         return self._all_packages_of_type('archive')
 
@@ -98,7 +104,7 @@ def _add_additional_search_locations_based_on_centos_or_rhel(config):
 
 def _os_info():
     if _is_linux():
-        (os_short, version_long, label) = platform.linux_distribution(full_name=False)
+        (os_short, version_long, label) = platform.linux_distribution(full_distribution_name=False)
         return (os_short.lower() +  version_long.split('.')[0], _arch())
     else:
         return ('win32', _arch())

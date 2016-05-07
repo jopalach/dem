@@ -291,7 +291,6 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
 
     @patch('sys.platform', "linux2")
-    @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
     def test_willUnzipToPythonSitePackagesDestinationLinuxStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -312,6 +311,55 @@ class MyDem(fake_filesystem_unittest.TestCase):
         go.get_dem_packages(self.project)
 
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'lib', 'python2.7', 'sitepackages', 'json', 'eggs.exe')))
+
+
+    @patch('sys.platform', "win32")
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_will_not_extract_already_installed_archive(self, mock_stdout):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages:
+                json:
+                    version: 1.8
+                    type: archive''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile('eggs.txt', contents='''
+            I like my eggs runny.''')
+
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write('eggs.txt')
+
+        go.get_dem_packages(self.project)
+        with open('devenv.yaml', 'a+') as f:
+            f.write('\n\n')
+
+        go.get_dem_packages(self.project)
+
+        self.assertTrue('json-1.8 already installed' in mock_stdout.getvalue())
+
+    @patch('sys.platform', "win32")
+    @patch('subprocess.call')
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_will_not_extract_already_installed_archive(self, mock_stdout, mock_subprocess):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages:
+                json:
+                    version: 1.8
+                    type: rpm''')
+        os.makedirs(remote_location)
+
+        go.get_dem_packages(self.project)
+        with open('devenv.yaml', 'a+') as f:
+            f.write('\n\n')
+
+        go.get_dem_packages(self.project)
+
+        self.assertTrue('json-1.8 already installed' in mock_stdout.getvalue())
 
 if __name__ == '__main__':
     unittest.main()
