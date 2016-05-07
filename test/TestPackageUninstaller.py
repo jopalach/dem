@@ -30,7 +30,7 @@ packages:
         version: 4.8.6
         type: archive
     gcc:
-        version: 5.2.0
+        version: 5.2.1
         type: rpm
 '''
 
@@ -59,7 +59,8 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
 
         self.setup_directories()
 
-    def test_will_remove_archive_packages_that_have_changed(self):
+    @mock.patch('subprocess.call')
+    def test_will_remove_archive_packages_that_have_changed(self, mock_subprocess):
         self.setup_files(SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_package('qt')
         self.create_package('json')
@@ -69,11 +70,10 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
         uninstaller = PackageUninstaller(cache, packages)
         uninstaller.uninstall_changed_packages()
 
-        print(os.path.join(self._deps, 'json'))
-        print(os.path.exists(os.path.join(self._deps, 'json')))
         self.assertFalse(os.path.exists(os.path.join(self._deps, 'json')))
 
-    def test_will_remove_archive_packages_that_have_been_removed(self):
+    @mock.patch('subprocess.call')
+    def test_will_remove_archive_packages_that_have_been_removed(self, mock_subprocess):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_package('qt')
         self.create_package('json')
@@ -83,9 +83,20 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
         uninstaller = PackageUninstaller(cache, packages)
         uninstaller.uninstall_changed_packages()
 
-        print(os.path.join(self._deps, 'json'))
-        print(os.path.exists(os.path.join(self._deps, 'json')))
         self.assertFalse(os.path.exists(os.path.join(self._deps, 'json')))
+
+    @mock.patch('subprocess.call')
+    def test_will_call_yum_for_removed_system_packages(self, mock_subprocess):
+        self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
+        self.create_package('qt')
+        self.create_package('json')
+        cache = PackageCache(self._base_path)
+        (config, packages) = reader.devenv_from_file(self._yaml_file)
+
+        uninstaller = PackageUninstaller(cache, packages)
+        uninstaller.uninstall_changed_packages()
+
+        mock_subprocess.assert_called_once_with(['sudo', 'yum', 'remove', 'gcc', '-y'])
 
     def setup_directories(self):
         self.fs.CreateDirectory(self._base_path)

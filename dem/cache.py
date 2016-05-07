@@ -30,13 +30,10 @@ class PackageCache(object):
             json.dump(data, f)
 
     def local_installed_packages(self):
-        installed_packages = {}
-        packages = self._cache_data().get('packages', {})
-        for name, info in packages.items():
-            type = info.get('type', None)
-            if type == 'local':
-                installed_packages[name] = info
-        return installed_packages
+        return self._packages_of_type('local')
+
+    def system_installed_packages(self):
+        return self._packages_of_type('system')
 
     def install_location(self, name):
         data = self._cache_data().get('packages', {})
@@ -72,3 +69,11 @@ class PackageCache(object):
         current_md5 = self._cache_data().get('md5', '')
         return digest == current_md5
 
+    def _packages_of_type(self, type_to_find):
+        installed_packages = {}
+        packages = self._cache_data().get('packages', {})
+        for name, info in packages.items():
+            package_type = info.get('type', None)
+            if package_type == type_to_find:
+                installed_packages[name] = info
+        return installed_packages
