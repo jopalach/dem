@@ -65,7 +65,7 @@ class ArchiveInstaller:
         if p['install_from_ext'] == 'zip':
             members = archive.infolist()
             for member in reversed(members):
-                if '/' in member.filename:
+                if '/' in member.filename and not member.filename.endswith('/'):
                     value = member.filename.split('/', 1)[1]
                     member.filename = value
                 else:
