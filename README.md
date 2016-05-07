@@ -2,3 +2,7 @@
 
 ## Overview
 An agnostic library/package manager for setting up a development environment.
+Supports Installing from packages existing in:
+ - Local filesystem
+ - URL's
+ - Yum packages
