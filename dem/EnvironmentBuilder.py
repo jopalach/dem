@@ -11,7 +11,9 @@ class EnvironmentBuilder(object):
 
         print('[dem] building environment')
         deps_dir = os.path.join(project_dir, 'dependencies')
+        downloads_dir = os.path.join(project_dir, 'downloads')
 
         os.makedirs(project_dir)
         virtualenv.create_environment(project_dir)
         os.makedirs(deps_dir)
+        os.makedirs(downloads_dir)

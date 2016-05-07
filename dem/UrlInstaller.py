@@ -18,7 +18,7 @@ class UrlInstaller:
         for p in self._packages:
             if 'url' in p:
                 file_extension = UrlInstaller._get_ext(p['url'])
-                file_name = '{}-{}.{}'.format(p['name'], p['version'], file_extension)
+                file_name = '{}-{}{}'.format(p['name'], p['version'], file_extension)
                 local_file = os.path.join(self._download_directory, file_name)
                 if not os.path.exists(local_file):
                     wget.download(p['url'], out=local_file)
@@ -28,5 +28,8 @@ class UrlInstaller:
 
     @staticmethod
     def _get_ext(url):
-        return url.split('/')[-1].split('.', 1)[1]
+        root, ext = os.path.splitext(url.split('/')[-1])
+        if ext in ['.gz', '.bz2']:
+            ext = os.path.splitext(root)[1] + ext
+        return ext
 
