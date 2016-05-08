@@ -19,7 +19,7 @@ def get_dem_packages(project):
     elif os.path.exists('devenv.yaml') and 'VIRTUAL_ENV' not in os.environ:
         base_path = os.getcwd()
     elif 'SKIP_ENVIRONMENT_CHECK' in os.environ:  # Tests run in a virtual environment!
-        pass
+        base_path = os.getcwd()
     else:
         base_path = os.environ['VIRTUAL_ENV'].split(os.path.join('.devenv', project), 1)[0]
 
