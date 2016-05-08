@@ -1,4 +1,6 @@
 import os
+
+import sys
 import wget
 
 from . ArchiveInstaller import ArchiveInstaller
@@ -22,7 +24,9 @@ class UrlInstaller:
                 file_name = '{}-{}{}'.format(p['name'], p['version'], file_extension)
                 local_file = os.path.join(self._download_directory, file_name)
                 if not os.path.exists(local_file) and not self._cache.is_package_installed(p['name'], p['version']):
+                    print('Fetching {}'.format(p['url']))
                     wget.download(p['url'], out=local_file)
+                    print()
                 installed_packages.append(p)
         local_installer = ArchiveInstaller(self._project, self._config, installed_packages, self._cache)
         return local_installer.install_packages()
