@@ -13,3 +13,6 @@ install:
 
 # command to run tests
 script: nosetests
+
+env:
+  - SKIP_ENVIRONMENT_CHECK=TRUE
