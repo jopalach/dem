@@ -31,5 +31,15 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Build Tools',
     ],
-    packages=['dem']
+    packages=['dem'],
+    install_requires=[
+        'virtualenv',
+        'PyYaml',
+        'wget',
+        'gitpython'
+    ],
+    tests_require=[
+        'pyfakefs',
+        'mock'
+    ]
 )
