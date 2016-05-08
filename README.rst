@@ -1,6 +1,10 @@
-# Development Environment Manager [![Build Status](https://travis-ci.org/nitehawck/dem.svg?branch=master)](https://travis-ci.org/nitehawck/dem)
-
-## Overview
+Development Environment Manager
+========================
+.. image:: https://travis-ci.org/nitehawck/dem.svg?branch=master
+    :target: https://travis-ci.org/nitehawck/dem
+    
+Overview
+------------------------
 An agnostic library/package manager for setting up a development project environment.  Dependencies are necessary for most projects and are seldom installed and maintained correctly.
 
 Key features:
@@ -12,12 +16,11 @@ Supports installing from packages existing in:
  - URL's
  - Yum packages
 
-## Getting Started
-
+Getting Started
+------------------------
 Create a devenv.yaml configuration file in your project's root directory.
 
-yaml format= 
-```
+.. code-block:: yaml
 config:
    remote-locations: ['/var/myRepo/', '//network/myRepo']
 packages:
@@ -33,5 +36,4 @@ packages:
   alien:
       version: 2.3
       type: rpm
-    
-```
+
