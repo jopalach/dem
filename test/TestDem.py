@@ -35,6 +35,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         pass
 
     @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
     def test_willCreateDependenciesFolder(self):
         self.fs.CreateFile('devenv.yaml')
 
@@ -43,6 +44,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertTrue(os.path.exists('.devenv'))
 
     @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
     def test_willUnzipDependencyIntoDependenciesDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -65,6 +67,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "win32")
     @patch('sys.stdout', new_callable=StringIO)
+    @mock.patch('subprocess.call', MagicMock())
     def test_willPrintMessageWhenArchivedPackageCannotBeFound(self, mock_stdout):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -86,6 +89,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertTrue('Could not find package: json, version: 1.8\n' in mock_stdout.getvalue())
 
     @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
     def test_willInstallFirstPackageFound(self):
         remote_location1 = os.path.abspath(os.path.join(os.pathsep, 'opt1'))
         remote_location2 = os.path.abspath(os.path.join(os.pathsep, 'opt2'))
@@ -115,6 +119,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join('.devenv', self.project, 'dependencies', 'json', 'not_my_eggs.txt')))
 
     @unittest.skip("FakeFS does not support tar?\n")
+    @mock.patch('subprocess.call', MagicMock())
     def test_willUntarDependencyIntoLibsDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -136,6 +141,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'dependencies', 'json', 'eggs.txt')))
 
     @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
     def test_willNotInstallLinuxPackagesForWindowsOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -158,6 +164,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
+    @mock.patch('subprocess.call', MagicMock())
     def test_willNotInstallWindowsPackagesForLinuxOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -180,6 +187,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
+    @mock.patch('subprocess.call', MagicMock())
     def test_willInstallLinuxPackagesForLinuxOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -201,6 +209,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'dependencies', 'json', 'eggs.txt')))
 
     @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
     def test_willInstallWindowsPackagesForWindowsOS(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -223,6 +232,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
 
     @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
     def test_willUnzipToBinaryDestinationWindowsStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -246,6 +256,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
+    @mock.patch('subprocess.call', MagicMock())
     def test_willUnzipToBinaryDestinationLinuxStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -268,6 +279,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
 
     @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
     def test_willUnzipToPythonSitePackagesDestinationWindowsStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -292,6 +304,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "linux2")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
+    @mock.patch('subprocess.call', MagicMock())
     def test_willUnzipToPythonSitePackagesDestinationLinuxStrippingParentDirectory(self):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -315,6 +328,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "win32")
     @patch('wget.download')
+    @mock.patch('subprocess.call', MagicMock())
     def test_willDownloadUrlToPythonSitePackagesDestinationWindowsStrippingParentDirectory(self, mock_wget):
         self.fs.CreateFile('devenv.yaml', contents='''
                 packages:
@@ -342,6 +356,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "win32")
     @patch('sys.stdout', new_callable=StringIO)
+    @mock.patch('subprocess.call', MagicMock())
     def test_will_not_extract_already_installed_archive(self, mock_stdout):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
@@ -368,6 +383,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "win32")
     @patch('git.Repo.clone_from')
+    @mock.patch('subprocess.call', MagicMock())
     def test_willCloneGitRepositoryAndCheckoutShaToARelativeDirectory(self, mock_clone):
         self.fs.CreateFile('devenv.yaml', contents='''
                    config:
@@ -411,6 +427,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         go.get_dem_packages(self.project)
 
         self.assertTrue('json-1.8 already installed' in mock_stdout.getvalue())
+
 
 
 

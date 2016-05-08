@@ -1,4 +1,9 @@
 import os, shutil
+import textwrap
+
+import subprocess
+
+import sys
 import virtualenv
 
 
@@ -14,6 +19,21 @@ class EnvironmentBuilder(object):
         downloads_dir = os.path.join(project_dir, 'downloads')
 
         os.makedirs(project_dir)
+
         virtualenv.create_environment(project_dir)
+
+        EnvironmentBuilder._install_dem_into_virtual_environment(project_dir)
+
         os.makedirs(deps_dir)
         os.makedirs(downloads_dir)
+
+    @staticmethod
+    def _install_dem_into_virtual_environment(project_dir):
+        if sys.platform == 'win32':
+            bin = 'Scripts'
+            exe = 'pip.exe'
+        else:
+            bin = 'bin'
+            exe = 'pip'
+
+        subprocess.call([os.path.join(project_dir, bin, exe), 'install', 'dem'])

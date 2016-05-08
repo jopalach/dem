@@ -9,34 +9,56 @@ class TestEnvironmentBuilder(fake_filesystem_unittest.TestCase):
         self.setUpPyfakefs()
 
     @mock.patch('virtualenv.create_environment')
-    def test_will_create_devenv_dir(self, mock_virtualenv):
+    @mock.patch('subprocess.call')
+    def test_will_create_devenv_dir(self, mock_virtualenv, mock_subpprocess):
         EnvironmentBuilder.build('')
 
         self.assertTrue(os.path.exists('.devenv'))
 
     @mock.patch('virtualenv.create_environment')
-    def test_will_create_project_dir(self, mock_virtualenv):
+    @mock.patch('subprocess.call')
+    def test_will_create_project_dir(self, mock_virtualenv, mock_subpprocess):
         EnvironmentBuilder.build('project')
 
         self.assertTrue(os.path.exists(os.path.join('.devenv', 'project')))
 
     @mock.patch('virtualenv.create_environment')
-    def test_will_create_dependencies_dir(self, mock_virtualenv):
+    @mock.patch('subprocess.call')
+    def test_will_create_dependencies_dir(self, mock_virtualenv, mock_subpprocess):
         EnvironmentBuilder.build('project')
 
         self.assertTrue(os.path.exists(os.path.join('.devenv', 'project', 'dependencies')))
 
+    @mock.patch('subprocess.call')
     @mock.patch('virtualenv.create_environment')
-    def test_will_create_virtualenv_in_devenv_dir(self, mock_virtualenv):
+    def test_will_create_virtualenv_in_devenv_dir(self, mock_virtualenv, mock_subpprocess):
         EnvironmentBuilder.build('project')
 
         mock_virtualenv.assert_called_once_with(os.path.join(os.getcwd(), '.devenv', 'project'))
 
+    @mock.patch('subprocess.call')
     @mock.patch('virtualenv.create_environment')
-    def test_will_create_downloads_dir(self, mock_virtualenv):
+    def test_will_create_downloads_dir(self, mock_virtualenv, mock_subpprocess):
         EnvironmentBuilder.build('project')
 
         self.assertTrue(os.path.exists(os.path.join('.devenv', 'project', 'downloads')))
+
+    @mock.patch('subprocess.call')
+    @mock.patch('virtualenv.create_environment')
+    @mock.patch('sys.platform', 'win32')
+    def test_will_install_dem_into_virtual_env_windows(self, mock_virtualenv, mock_subpprocess):
+        EnvironmentBuilder.build('project')
+
+        mock_subpprocess.assert_any_call([os.path.join(os.getcwd(), '.devenv', 'project', 'Scripts', 'pip.exe'), 'install', 'dem'])
+
+    @mock.patch('subprocess.call')
+    @mock.patch('virtualenv.create_environment')
+    @mock.patch('sys.platform', 'linux2')
+    def test_will_install_dem_into_virtual_env_linux(self, mock_virtualenv, mock_subpprocess):
+        EnvironmentBuilder.build('project')
+
+        mock_subpprocess.assert_any_call(
+            [os.path.join(os.getcwd(), '.devenv', 'project', 'bin', 'pip'), 'install', 'dem'])
 
 
 if __name__ == '__main__':
