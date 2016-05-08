@@ -6,8 +6,6 @@
 Welcome to dem's documentation!
 ===============================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
