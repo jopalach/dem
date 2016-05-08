@@ -27,7 +27,7 @@ class PackageCache(object):
                 packages[name] = info
         data['packages'] = packages
         with open(self._cache_file, 'w+') as f:
-            json.dump(data, f)
+            json.dump(data, f, indent=4, separators=(',', ': '))
 
     def is_package_installed(self, name, version):
         data = self._cache_data().get('packages', {})
