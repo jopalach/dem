@@ -2,7 +2,6 @@ import os
 import unittest
 import mock
 
-from dem.DevEnvReader import Config
 from dem.cache import PackageCache
 from dem.UrlInstaller import UrlInstaller
 
@@ -11,6 +10,7 @@ class MyTestCase(unittest.TestCase):
     @mock.patch('wget.download')
     def test_will_get_packages_and_download(self, mock_wget):
         cache = mock.MagicMock(spec = PackageCache)
+        cache.is_package_installed.return_value = False
         packages = [{'name': 'package', 'version': '1.3.0', 'url': 'http://website.com/something.tar.gz'},
                     {'name': 'package4', 'version': '0.3.0', 'url': 'http://website.com/somethingElse.tar.gz'}]
         installer = UrlInstaller('myProject', packages, cache)
@@ -27,6 +27,7 @@ class MyTestCase(unittest.TestCase):
     @mock.patch('wget.download')
     def test_will_not_download_if_exists_in_downloads(self, mock_wget, mock_exists):
         cache = mock.MagicMock(spec = PackageCache)
+        cache.is_package_installed.return_value = False
         packages = [{'name': 'package', 'version': '1.3.0', 'url': 'http://website.com/something.tar.gz'},
                     {'name': 'package4', 'version': '0.3.0', 'url': 'http://website.com/somethingElse.tar.gz'}]
 
@@ -44,6 +45,19 @@ class MyTestCase(unittest.TestCase):
 
         download_file2 = os.path.join('.devenv', 'myProject', 'downloads', 'package4-0.3.0.tar.gz')
         mock_wget.assert_called_once_with(packages[1]['url'], out=download_file2)
+
+    @mock.patch('wget.download')
+    def test_will_not_download_if_package_installed(self, mock_wget):
+        cache = mock.MagicMock(spec=PackageCache)
+        cache.is_package_installed.return_value = True
+        packages = [{'name': 'package', 'version': '1.3.0', 'url': 'http://website.com/something.tar.gz'},
+                    {'name': 'package4', 'version': '0.3.0', 'url': 'http://website.com/somethingElse.tar.gz'}]
+        installer = UrlInstaller('myProject', packages, cache)
+
+        mock_wget.download.return_value = 'file'
+        installer.install_packages()
+
+        mock_wget.assert_not_called()
 
     # @mock.patch('os.path.exists')
     # @mock.patch('dem.ArchiveInstaller')

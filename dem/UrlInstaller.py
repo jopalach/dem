@@ -21,7 +21,7 @@ class UrlInstaller:
                 file_extension = UrlInstaller._get_ext(p['url'])
                 file_name = '{}-{}.{}'.format(p['name'], p['version'], file_extension)
                 local_file = os.path.join(self._download_directory, file_name)
-                if not os.path.exists(local_file):
+                if not os.path.exists(local_file) and not self._cache.is_package_installed(p['name'], p['version']):
                     wget.download(p['url'], out=local_file)
                     installed_packages.append(p)
         local_installer = ArchiveInstaller(self._project, self._config, installed_packages, self._cache)
