@@ -46,6 +46,9 @@ class PackageCache(object):
     def system_installed_packages(self):
         return self._packages_of_type('system')
 
+    def custom_installed_packages(self):
+        return self._packages_of_type('custom')
+
     def install_location(self, name):
         data = self._cache_data().get('packages', {})
         location = data.get(name, {}).get('install_location', None)

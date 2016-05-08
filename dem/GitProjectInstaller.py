@@ -22,7 +22,9 @@ class GitProjectInstaller:
                 clone_location = os.path.join(p['platform-destination-path'], p['name'])
                 repo = Repo.clone_from(p['url'], clone_location)
                 repo.git.checkout(p['version'])
-                installed_packages.append(p)
+                package = dict()
+                package[p['name']] = {'version': p['version'], 'type': 'local', 'install_location': clone_location}
+                installed_packages.append(package)
 
         return installed_packages
 
