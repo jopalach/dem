@@ -7,6 +7,7 @@ Development Environment Manager
 .. image:: https://img.shields.io/pypi/v/dem.svg 
         :target: https://pypi.python.org/pypi/dem
 
+Overview
 ------------------------
 An agnostic library/package manager for setting up a development project environment.  Dependencies are necessary for most projects and are seldom installed and maintained correctly.
 
