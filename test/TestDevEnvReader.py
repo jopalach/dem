@@ -100,6 +100,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertNotEquals(packages['x11'], None)
 
     @patch('sys.platform', "win32")
+    @unittest.skip("Move into new test for fixing up package\n")
     def test_willReadVersionFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
 
@@ -124,6 +125,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertEquals(packages['x11']['type'], 'rpm')
 
     @patch('sys.platform', "win32")
+    @unittest.skip("Move into new test for fixing up package\n")
     def test_willReadTypeFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
 

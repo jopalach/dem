@@ -15,6 +15,8 @@ class Config:
         return self._config['remote_locations']
 
     def has_remote_locations(self):
+        if self._config is None:
+            return False
         return 'remote_locations' in self._config
 
 
@@ -49,27 +51,15 @@ class Packages:
     def url_packages(self):
         return self._all_packages_of_type('url')
 
+    def git_packages(self):
+        return self._all_packages_of_type('git')
+
     def _all_packages_of_type(self, type):
         packages = []
         for p in self._packages.values():
             if p['type'] == type:
                 packages.append(p)
         return packages
-
-
-def _auto_populate_missing_fields(packages):
-    for p in packages.values():
-        if 'version' not in p:
-            p['version'] = 'latest'
-        if 'destination' not in p:
-            p['destination'] = 'dependency-lib'
-
-
-def _reformat_versions(packages):
-    for p in packages.values():
-        if p['version'] is not str:
-            p['version'] = str(p['version'])
-
 
 def _fixup_remote_locations(config):
     if config is None:
@@ -79,7 +69,6 @@ def _fixup_remote_locations(config):
     if 'remote_locations' in config and not isinstance(config['remote_locations'], list):
         config['remote_locations'] = [config['remote_locations']]
     _add_additional_search_locations_based_on_platform(config)
-
 
 def _add_additional_search_locations_based_on_platform(config):
     (os_short, arch) = _os_info()
@@ -130,7 +119,6 @@ def _add_names(packages):
     for key in packages.keys():
         packages[key]['name'] = key
 
-
 def devenv_from_file(devenv_file_path):
     if not os.path.exists(devenv_file_path):
         print('[dem] Error: {} does not exists'.format(devenv_file_path))
@@ -149,8 +137,6 @@ def devenv_from_file(devenv_file_path):
     os_packages = "packages-{}".format(_platform())
     if devenv is not None and os_packages in devenv:
         packages.update(devenv[os_packages])
-    _auto_populate_missing_fields(packages)
-    _reformat_versions(packages)
     _add_names(packages)
 
     config = {}
@@ -182,3 +168,53 @@ def _platform():
     if sys.platform.startswith("linux"):
         return "linux"
     return "win32"
+
+
+def fixup_packages(packages, cache):
+    path_mapping = dict(linux={'bin': os.path.join(cache.project_path(), 'bin'),
+                               'python-site-packages': os.path.join(cache.project_path(), 'lib', 'python2.7',
+                                                        'sitepackages'),
+                               'dependency-lib': os.path.join(cache.project_path(), 'dependencies')},
+                        win32={'bin':  os.path.join(cache.project_path(), 'Scripts'),
+                               'python-site-packages': os.path.join(cache.project_path(),  'Lib',
+                                                        'site-packages'),
+                               'dependency-lib':  os.path.join(cache.project_path(), 'dependencies')})
+    fixed_path_types = ['bin', 'python-site-packages',  'dependency-lib']
+
+    def fix_version(p):
+        if 'version' not in p and 'type' in p and p['type'] == 'git':
+            p['version'] = 'master'
+        elif 'version' not in p:
+            p['version'] = 'latest'
+
+        if p['version'] is not str:
+            p['version'] = str(p['version'])
+
+    def setup_destination_paths(p):
+        if 'destination' not in p:
+            p['destination'] = 'dependency-lib'
+        if 'platform-destination-path' not in p and p['destination'] in fixed_path_types:
+            p['platform-destination-path'] = path_mapping[_platform()][p['destination']]
+        else:
+            p['platform-destination-path'] = os.path.join(cache.base_path(), p['destination'])
+
+    def fixup_type(p):
+        if 'type' not in p:
+            if 'url' in p and p['url'].endswith('.tar.gz', '.zip'):
+                p['type'] = 'url'
+            elif 'url' in p:
+                p['type'] = 'git'
+            else : # Could be RPM, but lets just guess for archive
+                p['type'] = 'archive'
+
+    for p in packages.values():
+        fix_version(p)
+        setup_destination_paths(p)
+        fixup_type(p)
+
+
+
+
+
+
+

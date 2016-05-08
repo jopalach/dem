@@ -10,12 +10,6 @@ class ArchiveInstaller:
         self._packages = packages
         self._project = project
         self._cache = cache
-        self._path_mapping = dict(linux={'bin': ['.devenv', self._project, 'bin'],
-                                         'python-site-packages': ['.devenv', self._project, 'lib', 'python2.7', 'sitepackages'],
-                                         'dependency-lib': ['.devenv', self._project, 'dependencies']},
-                                  win32={'bin': ['.devenv', self._project, 'Scripts'],
-                                         'python-site-packages': ['.devenv', self._project, 'Lib', 'site-packages'],
-                                         'dependency-lib': ['.devenv', self._project, 'dependencies']},)
 
     def install_packages(self):
         self._update_package_with_install_path()
@@ -49,7 +43,7 @@ class ArchiveInstaller:
         return installed_packages
 
     def _extract(self, archive, p):
-        destination_dir = self._platform_destination_path(p['destination'])
+        destination_dir = p['platform-destination-path']
         if p['destination'] == 'dependency-lib':
             destination_dir = os.path.join(destination_dir, p['name'])
             archive.extractall(destination_dir)
@@ -89,12 +83,3 @@ class ArchiveInstaller:
                     if os.path.isfile(package_file) and 'install_from' not in p:
                         p['install_from'] = package_file
                         p['install_from_ext'] = extension
-
-    def _platform_destination_path(self, destination):
-        return os.path.join(*self._path_mapping[self._platform()][destination])
-
-    def _platform(self):
-        if sys.platform.startswith("linux"):
-            return "linux"
-        return "win32"
-

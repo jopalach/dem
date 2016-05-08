@@ -3,4 +3,5 @@ mock
 virtualenv
 PyYaml
 wget
+gitpython
 nose
