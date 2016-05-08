@@ -11,3 +11,27 @@ Supports installing from packages existing in:
  - Local filesystem
  - URL's
  - Yum packages
+
+## Getting Started
+
+Create a devenv.yaml configuration file in your project's root directory.
+
+yaml format= 
+```
+config:
+   remote-locations: ['/var/myRepo/', '//network/myRepo']
+packages:
+  json:
+      version: 1.53.3
+      type: archive
+      destination: python-site-packages
+  git-python:
+      version: 2
+      type: url
+      url: https://github.com/gitpython-developers/GitPython/archive/0.3.6.tar.gz
+ packages-linux:
+  alien:
+      version: 2.3
+      type: rpm
+    
+```
