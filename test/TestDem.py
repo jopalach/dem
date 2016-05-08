@@ -379,7 +379,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
                            destination: code/python/''')
 
         mock_repo = MagicMock()
-        def clone_side_effect(url, destination):
+        def clone_side_effect(url, destination, branch):
             os.makedirs(destination)
             self.fs.CreateFile(os.path.join(destination, 'qtc.py'), contents='''
                           I like my eggs runny.''')

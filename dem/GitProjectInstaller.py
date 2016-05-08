@@ -20,8 +20,7 @@ class GitProjectInstaller:
             else:
                 print('[dem] cloning git {}-{}'.format(p['name'], p['version']))
                 clone_location = os.path.join(p['platform-destination-path'], p['name'])
-                repo = Repo.clone_from(p['url'], clone_location)
-                repo.checkout(p['version'])
+                repo = Repo.clone_from(p['url'], clone_location, branch=p['version'])
                 installed_packages.append(p)
 
         return installed_packages
