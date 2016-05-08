@@ -29,7 +29,7 @@ to your system. More information about ``pip`` and pypi can be found
 here:
 
 * `install pip <https://pip.pypa.io/en/latest/installing.html>`_
-* `pypi <https://pypi.python.org/pypi/GitPython>`_
+* `pypi <https://pypi.python.org/pypi/dem>`_
 
 .. _pip: https://pip.pypa.io/en/latest/installing.html
 
@@ -52,8 +52,8 @@ Development Environment Manager git repo is available on GitHub, which can be br
 
 and cloned using::
 
-	# git clone https://github.com/nitehawck/dem
+	$ git clone https://github.com/nitehawck/dem
 
 Finally verify the installation by running the `nose powered <http://code.google.com/p/python-nose/>`_ unit tests::
 
-    # nosetests
+    $ nosetests
