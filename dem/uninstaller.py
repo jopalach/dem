@@ -1,6 +1,6 @@
-import shutil
 import os, subprocess
-import errno, stat
+from . utils import Utils
+
 
 class PackageUninstaller(object):
     def __init__(self, cache, packages):
@@ -9,16 +9,16 @@ class PackageUninstaller(object):
 
     def uninstall_changed_packages(self):
         for name, version in self._packages_to_remove(self._cache.local_installed_packages()):
-            location = self._cache.install_location(name)
-            if location and os.path.exists(location):
-                self._remove_archive_package(location, name, version)
+            locations = self._cache.install_locations(name)
+            print('[dem] uninstalling {}-{}'.format(name, version))
+            for location in locations:
+                if os.path.isdir(location):
+                    Utils.remove_directory(location)
+                elif os.path.isfile(location):
+                    os.remove(location)
 
         for name, version in self._packages_to_remove(self._cache.system_installed_packages()):
             self._remove_system_package(name, version)
-
-        for name, version in self._packages_to_remove(self._cache.custom_installed_packages()):
-            #todo: handle custom installed packages
-            pass
 
     def _packages_to_remove(self, installed_packages):
         packages_to_remove = []
@@ -32,22 +32,9 @@ class PackageUninstaller(object):
         return packages_to_remove
 
     @staticmethod
-    def _remove_archive_package(location, package, version):
-        print('[dem] uninstalling {}-{}'.format(package, version))
-        shutil.rmtree(location, ignore_errors=False, onerror=remove_read_only)
-
-    @staticmethod
     def _remove_system_package(package, version):
         print('[dem] uninstalling {}-{}'.format(package, version))
         subprocess.call(['sudo', 'yum', 'remove', package, '-y'])
 
 
-# http://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows
-def remove_read_only(func, path, exc):
-    excvalue = exc[1]
-    if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
-        os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)  # 0777
-        func(path)
-    else:
-        raise
 

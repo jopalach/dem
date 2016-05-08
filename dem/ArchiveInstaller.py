@@ -14,66 +14,60 @@ class ArchiveInstaller:
     def install_packages(self):
         self._update_package_with_install_path()
         installed_packages = []
-
         for p in self._packages:
             if 'install_from' not in p:
-                print("Could not find package: {}, version: {}".format(p['name'], p['version']))
+                print("[dem] Could not find package: {}, version: {}".format(p['name'], p['version']))
             else:
                 if not self._cache.is_package_installed(p['name'], p['version']):
                     print('[dem] installing {}-{}'.format(p['name'], p['version']))
                     if p['install_from_ext'] == 'zip':
                         with ZipFile(p['install_from'], 'r') as archive:
-                            location = self._extract(archive, p)
+                            locations = self._extract(archive, p)
                     elif p['install_from_ext'] == 'tar.gz':
                         with TarFile.open(p['install_from'], 'r:gz') as archive:
-                            location = self._extract(archive, p)
+                            locations = self._extract(archive, p)
                     elif p['install_from_ext'] == 'tar.bz2':
                         with TarFile.open(p['install_from'], 'r:bz2') as archive:
-                            location = self._extract(archive, p)
+                            locations = self._extract(archive, p)
                     elif p['install_from_ext'] == 'gz':
                         with gzip.open(p['install_from'], 'r') as archive:
-                            location = self._extract(archive, p)
+                            locations = self._extract(archive, p)
                 else:
                     print('[dem] {}-{} already installed'.format(p['name'], p['version']))
-                    location = self._cache.install_location(p['name'])
+                    locations = self._cache.install_locations(p['name'])
                 package = dict()
-                package[p['name']] = {'version': p['version'], 'type': 'local', 'install_location': location}
+                package[p['name']] = {'version': p['version'], 'type': 'local', 'install_locations': locations}
                 installed_packages.append(package)
-
         return installed_packages
 
     def _extract(self, archive, p):
         destination_dir = p['platform-destination-path']
-        if p['destination'] == 'dependency-lib':
-            destination_dir = os.path.join(destination_dir, p['name'])
-            archive.extractall(destination_dir)
-            return destination_dir
-        else:
-            if p['destination'] == 'bin':
-                self._extract_all_stripping_parent_directory(destination_dir, p, archive)
-            if p['destination'] == 'python-site-packages':
-                self._extract_all_stripping_parent_directory(os.path.join(destination_dir, p['name']), p, archive)
-            return ''
+        destination_dir = os.path.join(destination_dir)
+        archive.extractall(destination_dir)
+        return [os.path.join(destination_dir, path) for path in self._installed_file_base_paths(archive, p)]
 
-    def _extract_all_stripping_parent_directory(self, destination_dir, p, archive):
+    @staticmethod
+    def _installed_file_base_paths(archive, p):
+        installed_file_base_paths = []
         if p['install_from_ext'] == 'zip':
             members = archive.infolist()
-            for member in reversed(members):
-                if '/' in member.filename and not member.filename.endswith('/'):
-                    value = member.filename.split('/', 1)[1]
-                    member.filename = value
+            for member in members:
+                if '/' not in member.filename:
+                    installed_file_base_paths.append(member.filename)
                 else:
-                    members.remove(member)
-            archive.extractall(destination_dir, members=members)
+                    base = member.filename.split('/')[0]
+                    if base not in installed_file_base_paths:
+                        installed_file_base_paths.append(base)
         elif p['install_from_ext'] == 'tar.gz' or p['install_from_ext'] == 'tar.bz2':
             members = archive.getmembers()
-            for member in reversed(members):
-                if '/' in member.name:
-                    value = member.name.split('/', 1)[1]
-                    member.name = value
+            for member in members:
+                if '/' not in member.name:
+                    installed_file_base_paths.append(member.name)
                 else:
-                    members.remove(member)
-            archive.extractall(destination_dir, members=members)
+                    base = member.name.split('/')[0]
+                    if base not in installed_file_base_paths:
+                        installed_file_base_paths.append(base)
+        return installed_file_base_paths
 
     def _update_package_with_install_path(self, supported_extensions=['zip', 'tar.gz', 'tar.bz2', '.gz']):
         for p in self._packages:

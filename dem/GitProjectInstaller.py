@@ -1,5 +1,5 @@
 import os
-
+from . utils import Utils
 from git import Repo
 
 
@@ -10,7 +10,6 @@ class GitProjectInstaller:
 
     def install_packages(self):
         installed_packages = []
-
         for p in self._packages:
             if not GitProjectInstaller._can_clone(p):
                 continue
@@ -20,12 +19,13 @@ class GitProjectInstaller:
             else:
                 print('[dem] cloning git {}-{}'.format(p['name'], p['version']))
                 clone_location = os.path.join(p['platform-destination-path'], p['name'])
+                if os.path.exists(clone_location):
+                    Utils.remove_directory(clone_location)
                 repo = Repo.clone_from(p['url'], clone_location)
                 repo.git.checkout(p['version'])
                 package = dict()
-                package[p['name']] = {'version': p['version'], 'type': 'local', 'install_location': clone_location}
+                package[p['name']] = {'version': p['version'], 'type': 'local', 'install_locations': [clone_location]}
                 installed_packages.append(package)
-
         return installed_packages
 
     @staticmethod

@@ -40,8 +40,8 @@ SAMPLE_CACHE_CONTENT = '''
 
     "packages":
     {
-        "qt": {"version": "4.8.6", "type": "local", "install_location": ".devenv/dependencies/qt"},
-        "json": {"version": "1.8", "type": "local", "install_location": ".devenv/dependencies/json"},
+        "qt": {"version": "4.8.6", "type": "local", "install_locations": [".devenv/dependencies/qt"]},
+        "json": {"version": "1.8", "type": "local", "install_locations": [".devenv/dependencies/json"]},
         "gcc": {"version": "5.2.0", "type": "system"}
     }
 }

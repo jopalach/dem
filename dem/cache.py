@@ -38,7 +38,10 @@ class PackageCache(object):
 
     def is_package_installed(self, name, version):
         data = self._cache_data().get('packages', {})
-        return name in data and data[name].get('version', '') == version
+        if name in data:
+            cached_version = data[name].get('version', '')
+            return version == cached_version
+        return False
 
     def local_installed_packages(self):
         return self._packages_of_type('local')
@@ -49,13 +52,10 @@ class PackageCache(object):
     def custom_installed_packages(self):
         return self._packages_of_type('custom')
 
-    def install_location(self, name):
+    def install_locations(self, name):
         data = self._cache_data().get('packages', {})
-        location = data.get(name, {}).get('install_location', None)
-        if location:
-            location = location.replace('/', os.sep)
-            return os.path.join(self._base, location)
-        return None
+        locations = data.get(name, {}).get('install_locations', [])
+        return [os.path.join(self._base, location.replace('/', os.sep)) for location in locations]
 
     def _hash_yaml(self):
         hasher = hashlib.md5()

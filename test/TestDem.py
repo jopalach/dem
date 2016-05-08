@@ -55,11 +55,11 @@ class MyDem(fake_filesystem_unittest.TestCase):
                     version: 1.8
                     type: archive''')
         os.makedirs(remote_location)
-        self.fs.CreateFile('eggs.txt', contents='''
+        self.fs.CreateFile('json/eggs.txt', contents='''
             I like my eggs runny.''')
 
         with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
-            myzip.write('eggs.txt')
+            myzip.write('json/eggs.txt')
 
         go.get_dem_packages(self.project)
 
@@ -103,15 +103,15 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         os.makedirs(remote_location1)
         os.makedirs(remote_location2)
-        self.fs.CreateFile('eggs.txt', contents='''
+        self.fs.CreateFile('json/eggs.txt', contents='''
             I like my eggs runny.''')
-        self.fs.CreateFile('not_my_eggs.txt', contents='''
+        self.fs.CreateFile('json/not_my_eggs.txt', contents='''
             I like my eggs runny.''')
 
         with ZipFile(os.path.join(remote_location1, 'json-1.8.zip'), 'w') as myzip:
-            myzip.write('eggs.txt')
+            myzip.write('json/eggs.txt')
         with ZipFile(os.path.join(remote_location2, 'json-1.8.zip'), 'w') as myzip:
-            myzip.write('not_my_eggs.txt')
+            myzip.write('json/not_my_eggs.txt')
 
         go.get_dem_packages(self.project)
 
@@ -198,11 +198,11 @@ class MyDem(fake_filesystem_unittest.TestCase):
                     version: 1.8
                     type: archive''')
         os.makedirs(remote_location)
-        self.fs.CreateFile('eggs.txt', contents='''
+        self.fs.CreateFile('json/eggs.txt', contents='''
             I like my eggs runny.''')
 
         with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
-            myzip.write('eggs.txt')
+            myzip.write('json/eggs.txt')
 
         go.get_dem_packages(self.project)
 
@@ -220,11 +220,11 @@ class MyDem(fake_filesystem_unittest.TestCase):
                         version: msvc2015-1.8
                         type: archive''')
         os.makedirs(remote_location)
-        self.fs.CreateFile('eggs.txt', contents='''
+        self.fs.CreateFile('json/eggs.txt', contents='''
                 I like my eggs runny.''')
 
         with ZipFile(os.path.join(remote_location, 'json-msvc2015-1.8.zip'), 'w') as myzip:
-            myzip.write('eggs.txt')
+            myzip.write('json/eggs.txt')
 
         go.get_dem_packages(self.project)
 
@@ -244,11 +244,11 @@ class MyDem(fake_filesystem_unittest.TestCase):
                     type: archive
                     destination: bin''')
         os.makedirs(remote_location)
-        self.fs.CreateFile(os.path.join('json', 'eggs.exe'), contents='''
+        self.fs.CreateFile('eggs.exe', contents='''
             I like my eggs runny.''')
 
         with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
-            myzip.write(os.path.join('json', 'eggs.exe'))
+            myzip.write('eggs.exe')
 
         go.get_dem_packages(self.project)
 
@@ -268,11 +268,11 @@ class MyDem(fake_filesystem_unittest.TestCase):
                        type: archive
                        destination: bin''')
         os.makedirs(remote_location)
-        self.fs.CreateFile(os.path.join('json', 'eggs.exe'), contents='''
+        self.fs.CreateFile('eggs.exe', contents='''
                I like my eggs runny.''')
 
         with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
-            myzip.write(os.path.join('json', 'eggs.exe'))
+            myzip.write('eggs.exe')
 
         go.get_dem_packages(self.project)
         self.assertTrue(os.path.exists(os.path.join('.devenv', self.project, 'bin', 'eggs.exe')))
