@@ -1,5 +1,6 @@
 import os
 
+from . GitProjectInstaller import GitProjectInstaller
 from . ArchiveInstaller import ArchiveInstaller
 from . import DevEnvReader as reader
 from . EnvironmentBuilder import EnvironmentBuilder
@@ -12,11 +13,11 @@ from . UrlInstaller import UrlInstaller
 def get_dem_packages(project):
     (config, packages) = reader.devenv_from_file('devenv.yaml')
 
-    cache = PackageCache(os.getcwd())
+    cache = PackageCache(project, os.getcwd())
     if not cache.needs_update():
         print('[dem] Up to date.')
         return
-
+    reader.fixup_packages(packages, cache)
     EnvironmentBuilder.build(project)
 
     package_uninstaller = PackageUninstaller(cache, packages)
@@ -30,6 +31,9 @@ def get_dem_packages(project):
 
     url_installer = UrlInstaller(project, packages.url_packages(), cache)
     installed_packages.extend(url_installer.install_packages())
+
+    git_installer = GitProjectInstaller(packages.git_packages(), cache)
+    installed_packages.extend(git_installer.install_packages())
 
     cache.update(installed_packages)
 

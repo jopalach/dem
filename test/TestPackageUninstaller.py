@@ -65,7 +65,7 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
         self.setup_files(SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_package('qt')
         self.create_package('json')
-        cache = PackageCache(self._base_path)
+        cache = PackageCache('myProject', self._base_path)
         (config, packages) = reader.devenv_from_file(self._yaml_file)
 
         uninstaller = PackageUninstaller(cache, packages)
@@ -79,7 +79,7 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_package('qt')
         self.create_package('json')
-        cache = PackageCache(self._base_path)
+        cache = PackageCache('myProject', self._base_path)
         (config, packages) = reader.devenv_from_file(self._yaml_file)
 
         uninstaller = PackageUninstaller(cache, packages)
@@ -93,7 +93,7 @@ class MyTestCase(fake_filesystem_unittest.TestCase):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_package('qt')
         self.create_package('json')
-        cache = PackageCache(self._base_path)
+        cache = PackageCache('myProject', self._base_path)
         (config, packages) = reader.devenv_from_file(self._yaml_file)
 
         uninstaller = PackageUninstaller(cache, packages)

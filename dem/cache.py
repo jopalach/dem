@@ -5,11 +5,18 @@ BLOCKSIZE = 65536
 
 
 class PackageCache(object):
-    def __init__(self, base_path):
+    def __init__(self, project, base_path):
+        self._project = project
         self._yaml_file = os.path.join(base_path, 'devenv.yaml')
         self._base = base_path
         self._devenv = os.path.join(base_path, '.devenv')
         self._cache_file = os.path.join(self._devenv, 'cache.json')
+
+    def base_path(self):
+        return self._base
+
+    def project_path(self):
+        return os.path.join(self._devenv, self._project)
 
     def needs_update(self):
         if os.path.exists(self._cache_file):

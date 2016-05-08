@@ -317,7 +317,6 @@ class MyDem(fake_filesystem_unittest.TestCase):
     @patch('wget.download')
     def test_willDownloadUrlToPythonSitePackagesDestinationWindowsStrippingParentDirectory(self, mock_wget):
         self.fs.CreateFile('devenv.yaml', contents='''
-                config:
                 packages:
                     qtcwatchdog:
                         version: 1.0.1
@@ -368,6 +367,30 @@ class MyDem(fake_filesystem_unittest.TestCase):
         self.assertTrue('json-1.8 already installed' in mock_stdout.getvalue())
 
     @patch('sys.platform', "win32")
+    @patch('git.Repo.clone_from')
+    def test_willCloneGitRepositoryAndCheckoutShaToARelativeDirectory(self, mock_clone):
+        self.fs.CreateFile('devenv.yaml', contents='''
+                   config:
+                   packages:
+                       qtcwatchdog:
+                           version: 72f3588eef1019bac8788fa58c52722dfa7c4d28
+                           type: git
+                           url: https://github.com/ismacaulay/qtcwatchdog
+                           destination: code/python/''')
+
+        mock_repo = MagicMock()
+        def clone_side_effect(url, destination):
+            os.makedirs(destination)
+            self.fs.CreateFile(os.path.join(destination, 'qtc.py'), contents='''
+                          I like my eggs runny.''')
+            return mock_repo
+
+        mock_clone.side_effect = clone_side_effect
+        go.get_dem_packages(self.project)
+        self.assertTrue(
+            os.path.exists(os.path.join('code/python/', 'qtcwatchdog')))
+
+    @patch('sys.platform', "win32")
     @patch('subprocess.call')
     @patch('sys.stdout', new_callable=StringIO)
     def test_will_not_extract_already_installed_archive(self, mock_stdout, mock_subprocess):
@@ -388,6 +411,8 @@ class MyDem(fake_filesystem_unittest.TestCase):
         go.get_dem_packages(self.project)
 
         self.assertTrue('json-1.8 already installed' in mock_stdout.getvalue())
+
+
 
 if __name__ == '__main__':
     unittest.main()
