@@ -1,5 +1,7 @@
 import os
 
+import sys
+
 from . GitProjectInstaller import GitProjectInstaller
 from . ArchiveInstaller import ArchiveInstaller
 from . import DevEnvReader as reader
@@ -11,9 +13,18 @@ from . UrlInstaller import UrlInstaller
 
 
 def get_dem_packages(project):
+    if not os.path.exists('devenv.yaml') and 'VIRTUAL_ENV' not in os.environ:
+        print('[dem] Please run from project root or enter the virtual environment to be able to run from anywhere')
+        sys.exit(1)
+    elif os.path.exists('devenv.yaml') and 'VIRTUAL_ENV' not in os.environ:
+        base_path = os.getcwd()
+    else:
+        base_path = os.environ['VIRTUAL_ENV'].split(os.path.join('.devenv', project), 1)[0]
+
+
     (config, packages) = reader.devenv_from_file('devenv.yaml')
 
-    cache = PackageCache(project, os.getcwd())
+    cache = PackageCache(project, base_path)
     if not cache.needs_update():
         print('[dem] Up to date.')
         return
