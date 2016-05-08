@@ -1,12 +1,15 @@
 ===============================
 Development Environment Manager
 ===============================
-
 .. image:: https://travis-ci.org/nitehawck/dem.svg?branch=master 
         :target: https://travis-ci.org/nitehawck/dem
 
 .. image:: https://img.shields.io/pypi/v/dem.svg 
         :target: https://pypi.python.org/pypi/dem
+        
+.. image:: https://readthedocs.org/projects/dem/badge/?version=latest
+        :target: http://dem.readthedocs.io/en/latest/?badge=latest
+        :alt: Documentation Status
 
 Overview
 --------
