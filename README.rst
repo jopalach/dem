@@ -1,5 +1,6 @@
+===============================
 Development Environment Manager
-========================
+===============================
 
 .. image:: https://travis-ci.org/nitehawck/dem.svg?branch=master 
         :target: https://travis-ci.org/nitehawck/dem
@@ -8,7 +9,7 @@ Development Environment Manager
         :target: https://pypi.python.org/pypi/dem
 
 Overview
-------------------------
+--------
 An agnostic library/package manager for setting up a development project environment.  Dependencies are necessary for most projects and are seldom installed and maintained correctly.
 
 Key features:
@@ -21,7 +22,7 @@ Supports installing from packages existing in:
     * Yum packages
 
 Getting Started
-------------------------
+---------------
 Create a devenv.yaml configuration file in your project's root directory.
 
 .. code-block:: yaml
