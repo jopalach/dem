@@ -12,7 +12,7 @@ class GitProjectInstaller:
         installed_packages = []
 
         for p in self._packages:
-            if not self._fixup(p):
+            if not GitProjectInstaller._can_clone(p):
                 continue
 
             if self._cache.is_package_installed(p['name'], p['version']):
@@ -26,9 +26,8 @@ class GitProjectInstaller:
 
         return installed_packages
 
-    def _fixup(self, p):
-        if 'version' not in p:
-            p['version'] = 'master'
+    @staticmethod
+    def _can_clone(p):
         if 'url' not in p:
             print('[dem] cannot clone {}-{} - URL missing'.format(p['name'], p['version']))
             return False
