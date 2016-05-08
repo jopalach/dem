@@ -21,10 +21,9 @@ def get_dem_packages(project):
     elif 'SKIP_ENVIRONMENT_CHECK' in os.environ:  # Tests run in a virtual environment!
         base_path = os.getcwd()
     else:
-        base_path = os.environ['VIRTUAL_ENV'].split(os.path.join('.devenv', project), 1)[0]
+        base_path = os.environ['VIRTUAL_ENV'].split(os.path.join('.devenv'), 1)[0]
 
-
-    (config, packages) = reader.devenv_from_file('devenv.yaml')
+    (config, packages) = reader.devenv_from_file(os.path.join(base_path, 'devenv.yaml'))
 
     cache = PackageCache(project, base_path)
     if not cache.needs_update():
