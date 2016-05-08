@@ -327,7 +327,6 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         def wget_side_effect(url, out):
             remote_location = os.path.join('.devenv', self.project, 'downloads')
-            os.makedirs(remote_location)
             self.fs.CreateFile(os.path.join('qtcwatchdog', 'qtc.py'), contents='''
                        I like my eggs runny.''')
 

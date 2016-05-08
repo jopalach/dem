@@ -32,6 +32,12 @@ class TestEnvironmentBuilder(fake_filesystem_unittest.TestCase):
 
         mock_virtualenv.assert_called_once_with(os.path.join(os.getcwd(), '.devenv', 'project'))
 
+    @mock.patch('virtualenv.create_environment')
+    def test_will_create_downloads_dir(self, mock_virtualenv):
+        EnvironmentBuilder.build('project')
+
+        self.assertTrue(os.path.exists(os.path.join('.devenv', 'project', 'downloads')))
+
 
 if __name__ == '__main__':
     unittest.main()
