@@ -38,7 +38,7 @@ class EnvironmentBuilder(object):
 
         cmd = [os.path.join(project_dir, bin, exe)]
         if config.has_http_proxy():
-            cmd.extend(['--proxy', config.http_proxy()])
+            cmd.extend(['--proxy={}'.format(config.http_proxy())])
         cmd.extend(['install', 'dem'])
         subprocess.call(cmd)
 

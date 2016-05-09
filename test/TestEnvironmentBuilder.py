@@ -72,7 +72,7 @@ class TestEnvironmentBuilder(fake_filesystem_unittest.TestCase):
         EnvironmentBuilder.build('project', self._config)
 
         pip_cmd = os.path.join(os.getcwd(), '.devenv', 'project', 'bin', 'pip')
-        mock_subpprocess.assert_any_call([pip_cmd, '--proxy', 'http://192.168.1.1:9000', 'install', 'dem'])
+        mock_subpprocess.assert_any_call([pip_cmd, '--proxy=http://192.168.1.1:9000', 'install', 'dem'])
 
 if __name__ == '__main__':
     unittest.main()
