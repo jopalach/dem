@@ -6,11 +6,11 @@
 Welcome to dem's documentation!
 ===============================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
+   intro
+   gettingstarted
 
 
 Indices and tables
