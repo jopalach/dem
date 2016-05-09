@@ -183,7 +183,7 @@ def _platform():
 def fixup_packages(packages, cache):
     path_mapping = dict(linux={'bin': os.path.join(cache.project_path(), 'bin'),
                                'python-site-packages': os.path.join(cache.project_path(), 'lib', 'python2.7',
-                                                        'sitepackages'),
+                                                        'site-packages'),
                                'dependency-lib': os.path.join(cache.project_path(), 'dependencies')},
                         win32={'bin':  os.path.join(cache.project_path(), 'Scripts'),
                                'python-site-packages': os.path.join(cache.project_path(),  'Lib',
