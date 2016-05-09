@@ -5,7 +5,7 @@ with open('README.rst') as f:
 
 setup(
     name="dem",
-    version="0.0.4",
+    version="0.0.5",
     author="Ian Macaulay, Jeremy Opalach",
     author_email="ismacaul@gmail.com",
     url="http://www.github.com/nitehawck/dem",
