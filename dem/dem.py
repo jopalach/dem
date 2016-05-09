@@ -30,7 +30,7 @@ def get_dem_packages(project):
         print('[dem] Up to date.')
         return
     reader.fixup_packages(packages, cache)
-    EnvironmentBuilder.build(project)
+    EnvironmentBuilder.build(project, config)
 
     package_uninstaller = PackageUninstaller(cache, packages)
     package_uninstaller.uninstall_changed_packages()
@@ -49,6 +49,12 @@ def get_dem_packages(project):
 
     cache.update(installed_packages)
 
-if __name__ == '__main__':
+
+def main():
     project = os.path.basename(os.getcwd())
     get_dem_packages(project)
+
+
+if __name__ == '__main__':
+    main()
+
