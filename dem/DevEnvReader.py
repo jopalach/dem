@@ -19,6 +19,16 @@ class Config:
             return False
         return 'remote_locations' in self._config
 
+    def http_proxy(self):
+        if self.has_http_proxy():
+            return self._config['http_proxy']
+        return None
+
+    def has_http_proxy(self):
+        if not self._config:
+            return False
+        return 'http_proxy' in self._config
+
 
 class Packages:
     def __init__(self, dictionary={}):
