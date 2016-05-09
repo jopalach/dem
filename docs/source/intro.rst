@@ -12,6 +12,20 @@ and all of the project's dependencies.  Running the dem tool will initially setu
 Running again will only update dependencies that have changed or will remove dependencies no longer needed.
 
 ==================
+Requirements
+==================
+
+dem is a multi-platform tool which currently works on Fedora and Windows based platforms.
+
+Supported python versions:
+
+* 2.7
+* 3.3
+* 3.4
+* 3.5
+
+
+==================
 Install
 ==================
 

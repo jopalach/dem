@@ -11,6 +11,7 @@ Welcome to dem's documentation!
 
    intro
    gettingstarted
+         tutorial
 
 
 Indices and tables
