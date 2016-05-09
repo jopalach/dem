@@ -10,6 +10,7 @@ config:
     remote_locations:
         ['/opt',
         'http://github.com']
+    http_proxy: http://192.168.1.2:9000
 packages:
     qt:
         version: 4.8.6
@@ -184,6 +185,24 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
     def test_will_exit_if_yaml_file_does_not_exist(self):
         with self.assertRaises(SystemExit):
             reader.devenv_from_file('unknown.yaml')
+
+    @patch('sys.platform', "win32")
+    def test_will_read_proxy_from_file(self):
+        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
+
+        (config, packages) = reader.devenv_from_file('devenv.yaml')
+
+        self.assertTrue(config.has_http_proxy())
+        self.assertEqual(config.http_proxy(), 'http://192.168.1.2:9000')
+
+    @patch('sys.platform', "win32")
+    def test_will_return_none_if_proxy_no_specified(self):
+        self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_LINUX_AND_ALL_PACKAGES)
+
+        (config, packages) = reader.devenv_from_file('devenv.yaml')
+
+        self.assertFalse(config.has_http_proxy())
+        self.assertEqual(config.http_proxy(), None)
 
 if __name__ == '__main__':
     unittest.main()

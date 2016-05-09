@@ -9,7 +9,7 @@ import virtualenv
 
 class EnvironmentBuilder(object):
     @staticmethod
-    def build(project):
+    def build(project, config):
         project_dir = os.path.join(os.getcwd(), '.devenv', project)
         if os.path.exists(project_dir):
             return
@@ -22,13 +22,13 @@ class EnvironmentBuilder(object):
 
         virtualenv.create_environment(project_dir)
 
-        EnvironmentBuilder._install_dem_into_virtual_environment(project_dir)
+        EnvironmentBuilder._install_dem_into_virtual_environment(project_dir, config)
 
         os.makedirs(deps_dir)
         os.makedirs(downloads_dir)
 
     @staticmethod
-    def _install_dem_into_virtual_environment(project_dir):
+    def _install_dem_into_virtual_environment(project_dir, config):
         if sys.platform == 'win32':
             bin = 'Scripts'
             exe = 'pip.exe'
@@ -36,4 +36,9 @@ class EnvironmentBuilder(object):
             bin = 'bin'
             exe = 'pip'
 
-        subprocess.call([os.path.join(project_dir, bin, exe), 'install', 'dem'])
+        cmd = [os.path.join(project_dir, bin, exe)]
+        if config.has_http_proxy():
+            cmd.extend(['--proxy={}'.format(config.http_proxy())])
+        cmd.extend(['install', 'dem'])
+        subprocess.call(cmd)
+
