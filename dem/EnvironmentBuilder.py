@@ -40,6 +40,5 @@ class EnvironmentBuilder(object):
         if config.has_http_proxy():
             cmd.extend(['--proxy', config.http_proxy()])
         cmd.extend(['install', 'dem'])
-        print(cmd)
         subprocess.call(cmd)
 
