@@ -2,7 +2,7 @@ import gzip
 import os, sys
 from tarfile import TarFile
 from zipfile import ZipFile
-
+from dem.pkgconfig import PkgConfigProcessor
 
 class ArchiveInstaller:
     def __init__(self, project, config, packages, cache):
@@ -32,6 +32,9 @@ class ArchiveInstaller:
                     elif p['install_from_ext'] == 'gz':
                         with gzip.open(p['install_from'], 'r') as archive:
                             locations = self._extract(archive, p)
+
+                    if 'pkg-config' in p:
+                        PkgConfigProcessor.replace_prefix(locations, p['pkg-config'])
                 else:
                     print('[dem] {}-{} already installed'.format(p['name'], p['version']))
                     locations = self._cache.install_locations(p['name'])

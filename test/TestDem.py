@@ -407,9 +407,9 @@ class MyDem(fake_filesystem_unittest.TestCase):
             os.path.exists(os.path.join('code/python/', 'qtcwatchdog')))
 
     @patch('sys.platform', "win32")
-    @patch('subprocess.call')
+    @mock.patch('subprocess.call', MagicMock())
     @patch('sys.stdout', new_callable=StringIO)
-    def test_will_not_extract_already_installed_archive(self, mock_stdout, mock_subprocess):
+    def test_will_not_extract_already_installed_archive(self, mock_stdout):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
@@ -428,7 +428,34 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertTrue('json-1.8 already installed' in mock_stdout.getvalue())
 
+    @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
+    def test_will_replace_pkg_config_prefix_with_installing_archives(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages:
+                json:
+                    version: 1.8
+                    type: archive
+                    pkg-config: pkgconfig''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile('json/eggs.txt', contents='''
+            I like my eggs runny.''')
+        self.fs.CreateFile('json/pkgconfig/eggs.pc', contents='''prefix=hello_world''')
 
+        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
+            myzip.write('json/eggs.txt')
+            myzip.write('json/pkgconfig/eggs.pc')
+
+        go.get_dem_packages(self.project)
+
+        print(os.listdir(os.path.join('.devenv', self.project, 'dependencies', 'json', 'pkgconfig')))
+        with open(os.path.join('.devenv', self.project, 'dependencies', 'json', 'pkgconfig', 'eggs.pc')) as f:
+            contents = f.readlines()
+
+        self.assertEqual(''.join(contents), 'prefix=/.devenv/project/dependencies/json\n')
 
 
 if __name__ == '__main__':
