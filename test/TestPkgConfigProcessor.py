@@ -117,6 +117,24 @@ class TestPkgConfigProcessor(fake_filesystem_unittest.TestCase):
 
         self.assertEqual(''.join(replaced_pkg_config_data), SAMPLE_PKG_CONFIG_FILE_WITH_NO_PREFIX)
 
+    @mock.patch('sys.platform', "win32")
+    def test_will_not_replace_prefix_in_non_pc_files(self):
+        self.setup_files(SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
+        self.create_dependency_directory(os.path.join('qt', 'lib'))
+        self.create_dependency_directory(os.path.join('qt', 'lib', 'pkgconfig'))
+        self.create_dependency_file(os.path.join('qt', 'lib', 'pkgconfig', 'Qt5Core.pc'), SAMPLE_PKG_CONFIG_FILE)
+        self.create_dependency_file(os.path.join('qt', 'lib', 'pkgconfig', 'non_pkg_config_file.text'), SAMPLE_PKG_CONFIG_FILE)
+
+        cache = PackageCache('myProject', self._base_path)
+        (_, packages) = reader.devenv_from_file(self._yaml_file)
+
+        PkgConfigProcessor.replace_prefix(cache.install_locations('qt'), packages['qt']['pkg-config'])
+
+        with open(os.path.join(self._deps, 'qt', 'lib', 'pkgconfig', 'non_pkg_config_file.text')) as f:
+            replaced_pkg_config_data = f.readlines()
+
+        self.assertEqual(''.join(replaced_pkg_config_data), SAMPLE_PKG_CONFIG_FILE)
+
     def setup_directories(self):
         self.fs.CreateDirectory(self._base_path)
         self.fs.CreateDirectory(self._dev_env)
