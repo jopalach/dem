@@ -2,7 +2,8 @@ import gzip
 import os, sys
 from tarfile import TarFile
 from zipfile import ZipFile
-from dem.pkgconfig import PkgConfigProcessor
+from . pkgconfig import PkgConfigProcessor
+
 
 class ArchiveInstaller:
     def __init__(self, project, config, packages, cache):

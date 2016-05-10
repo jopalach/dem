@@ -117,8 +117,9 @@ class TestPkgConfigProcessor(fake_filesystem_unittest.TestCase):
 
         self.assertEqual(''.join(replaced_pkg_config_data), SAMPLE_PKG_CONFIG_FILE_WITH_NO_PREFIX)
 
+    @mock.patch('dem.pkgconfig.open')
     @mock.patch('sys.platform', "win32")
-    def test_will_only_open_pc_files(self):
+    def test_will_only_open_pc_files(self, mock_open):
         self.setup_files(SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_dependency_directory(os.path.join('qt', 'lib'))
         self.create_dependency_directory(os.path.join('qt', 'lib', 'pkgconfig'))
@@ -126,10 +127,6 @@ class TestPkgConfigProcessor(fake_filesystem_unittest.TestCase):
                                     SAMPLE_PKG_CONFIG_FILE)
         self.create_dependency_file(os.path.join('qt', 'lib', 'pkgconfig', 'text.txt'),
                                     SAMPLE_PKG_CONFIG_FILE)
-
-        open_patcher = mock.patch('dem.pkgconfig.open', mock.mock_open())
-        self.addCleanup(open_patcher.stop)
-        mock_open = open_patcher.start()
 
         cache = PackageCache('myProject', self._base_path)
         (_, packages) = reader.devenv_from_file(self._yaml_file)
