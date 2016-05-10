@@ -117,25 +117,6 @@ class TestPkgConfigProcessor(fake_filesystem_unittest.TestCase):
 
         self.assertEqual(''.join(replaced_pkg_config_data), SAMPLE_PKG_CONFIG_FILE_WITH_NO_PREFIX)
 
-    @mock.patch('dem.pkgconfig.open')
-    @mock.patch('sys.platform', "win32")
-    def test_will_only_open_pc_files(self, mock_open):
-        self.setup_files(SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
-        self.create_dependency_directory(os.path.join('qt', 'lib'))
-        self.create_dependency_directory(os.path.join('qt', 'lib', 'pkgconfig'))
-        self.create_dependency_file(os.path.join('qt', 'lib', 'pkgconfig', 'Qt5Core.pc'),
-                                    SAMPLE_PKG_CONFIG_FILE)
-        self.create_dependency_file(os.path.join('qt', 'lib', 'pkgconfig', 'text.txt'),
-                                    SAMPLE_PKG_CONFIG_FILE)
-
-        cache = PackageCache('myProject', self._base_path)
-        (_, packages) = reader.devenv_from_file(self._yaml_file)
-
-        PkgConfigProcessor.replace_prefix(cache.install_locations('qt'), packages['qt']['pkg-config'])
-
-        mock_open.assert_any_call(os.path.join(self._deps, 'qt', 'lib', 'pkgconfig', 'Qt5Core.pc'))
-        mock_open.assert_any_call(os.path.join(self._deps, 'qt', 'lib', 'pkgconfig', 'Qt5Core.pc'), 'w+')
-
     def setup_directories(self):
         self.fs.CreateDirectory(self._base_path)
         self.fs.CreateDirectory(self._dev_env)
