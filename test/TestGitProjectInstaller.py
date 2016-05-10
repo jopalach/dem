@@ -10,7 +10,7 @@ from dem.GitProjectInstaller import GitProjectInstaller
 from dem.cache import PackageCache
 
 
-class MyTestCase(unittest.TestCase):
+class TestGitProjectInstaller(unittest.TestCase):
 
     @patch('git.Repo.clone_from')
     def test_will_not_install_git_project_if_already_installed(self, mock_git):

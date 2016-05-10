@@ -4,7 +4,7 @@ from dem.RpmInstaller import RpmInstaller
 from dem.cache import PackageCache
 
 
-class MyTestCase(unittest.TestCase):
+class TestRpmInstaller(unittest.TestCase):
     @mock.patch('subprocess.call')
     def test_will_install_package_with_yum_if_not_found_in_remote(self, mock_subprocess):
         cache = mock.MagicMock(spec=PackageCache)
