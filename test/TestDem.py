@@ -430,6 +430,24 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "win32")
     @mock.patch('subprocess.call', MagicMock())
+    def test_will_replace_pkg_config_prefix_with_installing_archives(self):
+        remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
+        self.fs.CreateFile('devenv.yaml', contents='''
+            config:
+                remote_locations: ''' + remote_location + '''
+            packages:
+                json:
+                    version: 1.8
+                    type: archive
+                    pkg-config: pkgconfig''')
+        os.makedirs(remote_location)
+        self.fs.CreateFile('json/eggs.txt', contents='''
+            I like my eggs runny.''')
+        self.fs.CreateFile('json/pkgconfig/eggs.pc', contents='''prefix=hello_world''')
+
+
+    @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
     @patch('dem.piprunner.PipRunner.install')
     @unittest.skip("Not quite woking")
     def test_willInstallLatestDem(self, mock_pip):

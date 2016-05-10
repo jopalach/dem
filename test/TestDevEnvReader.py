@@ -15,6 +15,7 @@ packages:
     qt:
         version: 4.8.6
         type: rpm
+        pkg-config: lib/pkgconfig
     json:
         version: 1.8
         type: archive
@@ -203,6 +204,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
 
         self.assertFalse(config.has_http_proxy())
         self.assertEqual(config.http_proxy(), None)
+
 
 if __name__ == '__main__':
     unittest.main()

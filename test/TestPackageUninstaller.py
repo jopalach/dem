@@ -47,7 +47,7 @@ SAMPLE_CACHE_CONTENT = '''
 }
 '''
 
-class MyTestCase(fake_filesystem_unittest.TestCase):
+class TestPackageUninstaller(fake_filesystem_unittest.TestCase):
     def setUp(self):
         self.setUpPyfakefs()
 

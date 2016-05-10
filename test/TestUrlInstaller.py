@@ -6,7 +6,7 @@ from dem.cache import PackageCache
 from dem.UrlInstaller import UrlInstaller
 
 
-class MyTestCase(unittest.TestCase):
+class TestUrlInstaller(unittest.TestCase):
     @mock.patch('wget.download')
     def test_will_get_packages_and_download(self, mock_wget):
         cache = mock.MagicMock(spec = PackageCache)
