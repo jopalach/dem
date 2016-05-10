@@ -428,7 +428,16 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
         self.assertTrue('json-1.8 already installed' in mock_stdout.getvalue())
 
+    @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
+    @patch('dem.piprunner.PipRunner.install')
+    @unittest.skip("Not quite woking")
+    def test_willInstallLatestDem(self, mock_pip):
+        self.fs.CreateFile('devenv.yaml')
 
+        go.get_dem_packages(self.project)
+
+        mock_pip.assert_any_call('dem', 'latest')
 
 
 if __name__ == '__main__':

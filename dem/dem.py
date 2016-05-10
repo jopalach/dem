@@ -10,18 +10,12 @@ from . RpmInstaller import RpmInstaller
 from . cache import PackageCache
 from . uninstaller import PackageUninstaller
 from . UrlInstaller import UrlInstaller
-
+from .utils import Utils
+from .piprunner import PipInstaller
 
 def get_dem_packages(project):
-    if not os.path.exists('devenv.yaml') and 'VIRTUAL_ENV' not in os.environ:
-        print('[dem] Please run from project root or enter the virtual environment to be able to run from anywhere')
-        sys.exit(1)
-    elif os.path.exists('devenv.yaml') and 'VIRTUAL_ENV' not in os.environ:
-        base_path = os.getcwd()
-    elif 'SKIP_ENVIRONMENT_CHECK' in os.environ:  # Tests run in a virtual environment!
-        base_path = os.getcwd()
-    else:
-        base_path = os.environ['VIRTUAL_ENV'].split(os.path.join('.devenv'), 1)[0]
+    utils = Utils(project)
+    base_path = utils.get_project_root_path()
 
     (config, packages) = reader.devenv_from_file(os.path.join(base_path, 'devenv.yaml'))
 
@@ -46,6 +40,9 @@ def get_dem_packages(project):
 
     git_installer = GitProjectInstaller(packages.git_packages(), cache)
     installed_packages.extend(git_installer.install_packages())
+
+    # pip_installer = PipInstaller(packages.pip_packages(), config, cache, utils)
+    # installed_packages.extend(pip_installer.install_packages())
 
     cache.update(installed_packages)
 
