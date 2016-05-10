@@ -1,7 +1,7 @@
 pyfakefs
 mock
+nose
 virtualenv
 PyYaml
 wget
 gitpython
-nose
