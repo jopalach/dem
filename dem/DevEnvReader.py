@@ -64,6 +64,9 @@ class Packages:
     def git_packages(self):
         return self._all_packages_of_type('git')
 
+    def pip_packages(self):
+        return self._all_packages_of_type('pip')
+
     def _all_packages_of_type(self, type):
         packages = []
         for p in self._packages.values():
@@ -190,6 +193,7 @@ def fixup_packages(packages, cache):
                                                         'site-packages'),
                                'dependency-lib':  os.path.join(cache.project_path(), 'dependencies')})
     fixed_path_types = ['bin', 'python-site-packages',  'dependency-lib']
+    packages._packages['dem'] = {'name': 'dem', 'version': 'latest', 'type': 'pip'}
 
     def fix_version(p):
         if 'version' not in p and 'type' in p and p['type'] == 'git':
@@ -203,6 +207,9 @@ def fixup_packages(packages, cache):
     def setup_destination_paths(p):
         if 'destination' not in p:
             p['destination'] = 'dependency-lib'
+        if p['type'] == 'pip':
+            p['destination'] = 'python-site-packages'
+
         if 'platform-destination-path' not in p and p['destination'] in fixed_path_types:
             p['platform-destination-path'] = path_mapping[_platform()][p['destination']]
         else:
@@ -219,12 +226,6 @@ def fixup_packages(packages, cache):
 
     for p in packages.values():
         fix_version(p)
-        setup_destination_paths(p)
         fixup_type(p)
 
-
-
-
-
-
-
+        setup_destination_paths(p)

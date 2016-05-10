@@ -407,9 +407,9 @@ class MyDem(fake_filesystem_unittest.TestCase):
             os.path.exists(os.path.join('code/python/', 'qtcwatchdog')))
 
     @patch('sys.platform', "win32")
-    @mock.patch('subprocess.call', MagicMock())
+    @patch('subprocess.call')
     @patch('sys.stdout', new_callable=StringIO)
-    def test_will_not_extract_already_installed_archive(self, mock_stdout):
+    def test_will_not_extract_already_installed_archive(self, mock_stdout, mock_subprocess):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
@@ -445,17 +445,17 @@ class MyDem(fake_filesystem_unittest.TestCase):
             I like my eggs runny.''')
         self.fs.CreateFile('json/pkgconfig/eggs.pc', contents='''prefix=hello_world''')
 
-        with ZipFile(os.path.join(remote_location, 'json-1.8.zip'), 'w') as myzip:
-            myzip.write('json/eggs.txt')
-            myzip.write('json/pkgconfig/eggs.pc')
+
+    @patch('sys.platform', "win32")
+    @mock.patch('subprocess.call', MagicMock())
+    @patch('dem.piprunner.PipRunner.install')
+    @unittest.skip("Not quite woking")
+    def test_willInstallLatestDem(self, mock_pip):
+        self.fs.CreateFile('devenv.yaml')
 
         go.get_dem_packages(self.project)
 
-        print(os.listdir(os.path.join('.devenv', self.project, 'dependencies', 'json', 'pkgconfig')))
-        with open(os.path.join('.devenv', self.project, 'dependencies', 'json', 'pkgconfig', 'eggs.pc')) as f:
-            contents = f.readlines()
-
-        self.assertEqual(''.join(contents), 'prefix=/.devenv/project/dependencies/json\n')
+        mock_pip.assert_any_call('dem', 'latest')
 
 
 if __name__ == '__main__':
