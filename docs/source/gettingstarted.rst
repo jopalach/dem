@@ -32,7 +32,7 @@ To enter the isolated environment:
 
 ::
     1. Open a Windows Command Prompt at the <PROJECT_ROOT>
-    2. $ .devenv\<PROJECT_ROOT_NAME>\Scripts\activate.bat
+        2. $ .devenv\\<PROJECT_ROOT_NAME>\\Scripts\\activate.bat
 
 :Linux:
 
