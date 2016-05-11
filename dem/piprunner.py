@@ -12,19 +12,28 @@ class PipRunner(object):
     def remove(self, package, version='latest'):
         self._execute_pip_command(package, version, 'remove')
 
-    def _add_pip(self, command):
-        command.extend(['&&', 'pip', '--yes'])
+    def _add_remove_pip(self):
+        command = ['&&', 'pip', 'uninstall', '--yes']
+        return command
+
+    def _add_install_pip(self):
+        command = ['&&', 'pip']
         if self.config is not None and self.config.has_http_proxy():
             command.extend(['--proxy={}'.format(self.config.http_proxy())])
+        command.extend(['install'])
+        return command
 
     def _execute_pip_command(self, package, version, action):
         command = self.util.get_activate_script_command()
-        self._add_pip(command)
+        if action == 'install':
+            command.extend(self._add_install_pip())
+        else:
+            command.extend(self._add_remove_pip())
 
         if version == 'latest':
-            subprocess.call(command + [action, package])
+            subprocess.call(command + [package])
         else:
-            subprocess.call(command + [action, '{}=={}'.format(package, version)])
+            subprocess.call(command + ['{}=={}'.format(package, version)])
 
 
 class PipInstaller(object):
