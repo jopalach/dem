@@ -10,12 +10,14 @@ Development Environment Manager (dem) is a python library used to manage a proje
 when working on a large project where multiple dependencies are required.
 
 Benefits:
+
 * Easily setup the project in the same way every time
 * Get new team members setup faster
 * Keeps the system environment from getting polluted with project specifics
 * Install dependencies from many different mediums
 
 Types of dependencies supported:
+
 * local/network archives and URLs (zips and tar.gz)
 * `git <https://git-scm.com/>`_ repositories
 * `yum <http://yum.baseurl.org/>`_ packages (Fedora based systems)
@@ -71,8 +73,7 @@ Source Code
 ===========
 
 Development Environment Manager git repo is available on GitHub, which can be browsed at:
-
- * https://github.com/nitehawck/dem
+    * https://github.com/nitehawck/dem
 
 and cloned using::
 
