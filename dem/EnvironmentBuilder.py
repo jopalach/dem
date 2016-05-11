@@ -22,23 +22,7 @@ class EnvironmentBuilder(object):
 
         virtualenv.create_environment(project_dir)
 
-        EnvironmentBuilder._install_dem_into_virtual_environment(project_dir, config)
-
         os.makedirs(deps_dir)
         os.makedirs(downloads_dir)
 
-    @staticmethod
-    def _install_dem_into_virtual_environment(project_dir, config):
-        if sys.platform == 'win32':
-            bin = 'Scripts'
-            exe = 'pip.exe'
-        else:
-            bin = 'bin'
-            exe = 'pip'
-
-        cmd = [os.path.join(project_dir, bin, exe)]
-        if config.has_http_proxy():
-            cmd.extend(['--proxy={}'.format(config.http_proxy())])
-        cmd.extend(['install', 'dem'])
-        subprocess.call(cmd)
 

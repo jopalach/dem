@@ -35,8 +35,10 @@ class PipInstaller(object):
             if self.cache.is_package_installed(p['name'], p['version']):
                 print('[dem] {}-{} already installed'.format(p['name'], p['version']))
             else:
-                print('[dem] installing {}-{}'.format(p['name'], p['version']))
+                print('[dem] pip installing {}-{}'.format(p['name'], p['version']))
                 self.pip_runner.install(p['name'], p['version'])
-                installed_packages.append(p)
+                package = dict()
+                package[p['name']] = {'version': p['version'], 'type': 'pip'}
+                installed_packages.append(package)
 
         return installed_packages

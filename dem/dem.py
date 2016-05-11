@@ -41,8 +41,8 @@ def get_dem_packages(project):
     git_installer = GitProjectInstaller(packages.git_packages(), cache)
     installed_packages.extend(git_installer.install_packages())
 
-    # pip_installer = PipInstaller(packages.pip_packages(), config, cache, utils)
-    # installed_packages.extend(pip_installer.install_packages())
+    pip_installer = PipInstaller(packages.pip_packages(), config, cache, utils)
+    installed_packages.extend(pip_installer.install_packages())
 
     cache.update(installed_packages)
 

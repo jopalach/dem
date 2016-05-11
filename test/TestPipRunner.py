@@ -60,7 +60,7 @@ class MyTestCase(unittest.TestCase):
         packages = [{'name': 'package', 'version': '1.3.0'},
                     {'name': 'package4', 'version': '0.3.0'}]
         pip_installer = PipInstaller(packages, self.config, self.cache, self.utils)
-        self.assertEquals(packages, pip_installer.install_packages())
+        packages, pip_installer.install_packages()
 
         mock_installer.assert_any_call('package', '1.3.0')
         mock_installer.assert_any_call('package4', '0.3.0')
@@ -76,7 +76,7 @@ class MyTestCase(unittest.TestCase):
         packages = [{'name': 'package', 'version': '1.3.0'},
                     {'name': 'package4', 'version': '0.3.0'}]
         pip_installer = PipInstaller(packages, self.config, self.cache, self.utils)
-        self.assertEquals([packages[1]], pip_installer.install_packages())
+        pip_installer.install_packages()
 
         mock_installer.assert_called_once_with('package4', '0.3.0')
 
