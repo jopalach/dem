@@ -4,12 +4,22 @@
 Overview
 ==================
 
-Development Environment Manager (dem) is a python library used to configure a project dependencies in a consistent fashion.  This is most useful
+*"Go get dem packages!" - dem creators*
+
+Development Environment Manager (dem) is a python library used to manage a project dependencies in a consistent fashion.  This is most useful
 when working on a large project where multiple dependencies are required.
 
-The dem tool creates an isolated environment that lives at the root level of project.  The environment contains a python virtual environment
-and all of the project's dependencies.  Running the dem tool will initially setup the project's environment and download all dependencies of the project.
-Running again will only update dependencies that have changed or will remove dependencies no longer needed.
+Benefits:
+* Easily setup the project in the same way every time
+* Get new team members setup faster
+* Keeps the system environment from getting polluted with project specifics
+* Install dependencies from many different mediums
+
+Types of dependencies supported:
+* local/network archives and URLs (zips and tar.gz)
+* `git <https://git-scm.com/>`_ repositories
+* `yum <http://yum.baseurl.org/>`_ packages (Fedora based systems)
+* `pip <https://pip.pypa.io>`_ packages
 
 ==================
 Requirements
