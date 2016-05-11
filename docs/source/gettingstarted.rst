@@ -7,9 +7,9 @@ Getting Started
 Setting up a new or existing project is easy.
 
 At the project's root directory create a configuration file that defines all the project's dependencies.
-For now simply create 'devenv.yaml'.  `YAML <http://yaml.org/>`_ was chosen as the configuration format so that anyone can easily modify the dependency list with ease.
+For now simply create **'devenv.yaml'**.  `YAML <http://yaml.org/>`_ was chosen as the configuration format so that anyone can easily modify the dependency list with ease.
 
-.. note:: The configuration file must be 'devenv.yaml'.
+.. note:: The configuration file must be **'devenv.yaml'**.
 
 At this point, the dem tool can be run.  No dependencies have been configured yet, but the isolated environment can still be created.
 
