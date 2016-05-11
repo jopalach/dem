@@ -24,23 +24,25 @@ The isolated environment is created at the root level of the project:
 Inside the *.devenv* directory is the `python virtual environment <https://virtualenv.pypa.io/en/latest/>`_.
 Technically designed for python, the virtual environment can be used for any project to create an isolated environment that does not pollute the system environment (Similar to a chroot or root jail).
 ::
-    i.e Environment variables such as PATH, can change how your system works.
+    i.e Environment variables such as PATH, can impact other projects or applications
 
 To enter the isolated environment:
 
 :Windows:
+
 ::
     1. Open a Windows Command Prompt at the <PROJECT_ROOT>
     2. $ .devenv\<PROJECT_ROOT_NAME>\Scripts\activate.bat
 
 :Linux:
-::
+
+    ::
     1. Open a Bash Shell at the <PROJECT_ROOT>
     2. $ source .devenv/<PROJECT_ROOT_NAME>/bin/activate.bash
 
 Notice the shell or command prompt now shows the project name:
 ::
-    (<PROJECT_ROOT_NAME>$
+        <PROJECT_ROOT_NAME>$
 
 To leave the project environment simply run:
 ::
