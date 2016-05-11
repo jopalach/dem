@@ -28,12 +28,12 @@ Technically designed for python, the virtual environment can be used for any pro
 
 To enter the isolated environment:
 
-:Windows:
+**Windows**
 ::
     1. Open a Windows Command Prompt at the <PROJECT_ROOT>
     2. $ .devenv\\<PROJECT_ROOT_NAME>\\Scripts\\activate.bat
 
-:Linux:
+**Linux**
 ::
     1. Open a Bash Shell at the <PROJECT_ROOT>
     2. $ source .devenv/<PROJECT_ROOT_NAME>/bin/activate.bash
