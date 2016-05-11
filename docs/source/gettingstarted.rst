@@ -29,24 +29,24 @@ Technically designed for python, the virtual environment can be used for any pro
 To enter the isolated environment:
 
 :Windows:
-    ::
-        1. Open a Windows Command Prompt at the <PROJECT_ROOT>
-        2. $ .devenv\<PROJECT_ROOT_NAME>\Scripts\activate.bat
+::
+    1. Open a Windows Command Prompt at the <PROJECT_ROOT>
+    2. $ .devenv\<PROJECT_ROOT_NAME>\Scripts\activate.bat
 
 :Linux:
-    ::
-        1. Open a Bash Shell at the <PROJECT_ROOT>
-        2. $ source .devenv/<PROJECT_ROOT_NAME>/bin/activate.bash
+::
+    1. Open a Bash Shell at the <PROJECT_ROOT>
+    2. $ source .devenv/<PROJECT_ROOT_NAME>/bin/activate.bash
 
-    Notice the shell or command prompt now shows the project name:
-    ::
-        (<PROJECT_ROOT_NAME>$
+Notice the shell or command prompt now shows the project name:
+::
+    (<PROJECT_ROOT_NAME>$
 
-    To leave the project environment simply run:
-    ::
-        $ deactivate
+To leave the project environment simply run:
+::
+    $ deactivate
 
-    Now the system environment is back.
+Now the system environment is back.
 
 ==================
 Dependencies
