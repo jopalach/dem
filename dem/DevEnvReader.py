@@ -157,6 +157,7 @@ def devenv_from_file(devenv_file_path):
         config = devenv['config']
 
     _fixup_remote_locations(config)
+    packages['dem'] = {'name': 'dem', 'version': 'latest', 'type': 'pip'}
 
     return Config(config), Packages(packages)
 
@@ -193,7 +194,6 @@ def fixup_packages(packages, cache):
                                                         'site-packages'),
                                'dependency-lib':  os.path.join(cache.project_path(), 'dependencies')})
     fixed_path_types = ['bin', 'python-site-packages',  'dependency-lib']
-    packages._packages['dem'] = {'name': 'dem', 'version': 'latest', 'type': 'pip'}
 
     def fix_version(p):
         if 'version' not in p and 'type' in p and p['type'] == 'git':

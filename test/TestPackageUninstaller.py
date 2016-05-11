@@ -2,6 +2,7 @@ import unittest, mock
 import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
 import os
 
+from dem.piprunner import PipRunner
 from dem.uninstaller import PackageUninstaller
 from dem.cache import PackageCache
 from dem import DevEnvReader as reader
@@ -32,6 +33,9 @@ packages:
     gcc:
         version: 5.2.1
         type: rpm
+    git-python:
+        version: 0.3.12
+        type: pip
 '''
 
 SAMPLE_CACHE_CONTENT = '''
@@ -42,7 +46,8 @@ SAMPLE_CACHE_CONTENT = '''
     {
         "qt": {"version": "4.8.6", "type": "local", "install_locations": [".devenv/dependencies/qt"]},
         "json": {"version": "1.8", "type": "local", "install_locations": [".devenv/dependencies/json"]},
-        "gcc": {"version": "5.2.0", "type": "system"}
+        "gcc": {"version": "5.2.0", "type": "system"},
+        "git-python": {"version": "0.3.10", "type": "pip"}
     }
 }
 '''
@@ -103,6 +108,21 @@ class TestPackageUninstaller(fake_filesystem_unittest.TestCase):
         uninstaller.uninstall_changed_packages()
 
         mock_subprocess.assert_called_once_with(['sudo', 'yum', 'remove', 'gcc', '-y'])
+
+    @mock.patch('sys.platform', "win32")
+    @mock.patch('dem.piprunner.PipRunner', spec=PipRunner)
+    @mock.patch('subprocess.call')
+    def test_will_call_pip_for_removed_system_packages(self, mock_subprocess, mock_pip_runner):
+        self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
+        self.create_package('qt')
+        self.create_package('json')
+        cache = PackageCache('myProject', self._base_path)
+        (config, packages) = reader.devenv_from_file(self._yaml_file)
+
+        uninstaller = PackageUninstaller(cache, packages, mock_pip_runner)
+        uninstaller.uninstall_changed_packages()
+
+        mock_pip_runner.remove.assert_called_once_with('git-python', '0.3.10')
 
     def setup_directories(self):
         self.fs.CreateDirectory(self._base_path)
