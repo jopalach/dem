@@ -7,18 +7,24 @@ class PipRunner(object):
         self.config = config
 
     def install(self, package, version='latest'):
+        self._execute_pip_command(package, version, 'install')
+
+    def remove(self, package, version='latest'):
+        self._execute_pip_command(package, version, 'remove')
+
+    def _add_pip(self, command):
+        command.extend(['&&', 'pip', '--yes'])
+        if self.config is not None and self.config.has_http_proxy():
+            command.extend(['--proxy={}'.format(self.config.http_proxy())])
+
+    def _execute_pip_command(self, package, version, action):
         command = self.util.get_activate_script_command()
         self._add_pip(command)
 
         if version == 'latest':
-            subprocess.call(command + ['install', package])
+            subprocess.call(command + [action, package])
         else:
-            subprocess.call(command + ['install', '{}=={}'.format(package, version)])
-
-    def _add_pip(self, command):
-        command.extend(['&&', 'pip'])
-        if self.config.has_http_proxy():
-            command.extend(['--proxy={}'.format(self.config.http_proxy())])
+            subprocess.call(command + [action, '{}=={}'.format(package, version)])
 
 
 class PipInstaller(object):

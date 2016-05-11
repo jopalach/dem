@@ -11,7 +11,8 @@ from . cache import PackageCache
 from . uninstaller import PackageUninstaller
 from . UrlInstaller import UrlInstaller
 from .utils import Utils
-from .piprunner import PipInstaller
+from . piprunner import PipInstaller, PipRunner
+
 
 def get_dem_packages(project):
     utils = Utils(project)
@@ -26,7 +27,7 @@ def get_dem_packages(project):
     reader.fixup_packages(packages, cache)
     EnvironmentBuilder.build(project, config)
 
-    package_uninstaller = PackageUninstaller(cache, packages)
+    package_uninstaller = PackageUninstaller(cache, packages, PipRunner(config, utils))
     package_uninstaller.uninstall_changed_packages()
 
     archive_installer = ArchiveInstaller(project, config, packages.archive_packages(), cache)

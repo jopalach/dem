@@ -32,6 +32,9 @@ packages:
     gcc:
         version: 5.2.1
         type: rpm
+    git-python:
+        version: 0.3.12
+        type: pip
 '''
 
 SAMPLE_CACHE_CONTENT = '''
@@ -43,6 +46,7 @@ SAMPLE_CACHE_CONTENT = '''
         "qt": {"version": "4.8.6", "type": "local", "install_locations": [".devenv/dependencies/qt"]},
         "json": {"version": "1.8", "type": "local", "install_locations": [".devenv/dependencies/json"]},
         "gcc": {"version": "5.2.0", "type": "system"}
+        "git-python": {"version": "0.3.10", "type": "pip"}
     }
 }
 '''
@@ -61,42 +65,45 @@ class TestPackageUninstaller(fake_filesystem_unittest.TestCase):
 
     @mock.patch('sys.platform', "win32")
     @mock.patch('subprocess.call')
-    def test_will_remove_archive_packages_that_have_changed(self, mock_subprocess):
+    @mock.patch('dem.piprunner.PipRunner.remove')
+    def test_will_remove_archive_packages_that_have_changed(self, mock_subprocess, mock_pip_runner):
         self.setup_files(SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_package('qt')
         self.create_package('json')
         cache = PackageCache('myProject', self._base_path)
         (config, packages) = reader.devenv_from_file(self._yaml_file)
 
-        uninstaller = PackageUninstaller(cache, packages)
+        uninstaller = PackageUninstaller(cache, packages, mock_pip_runner)
         uninstaller.uninstall_changed_packages()
 
         self.assertFalse(os.path.exists(os.path.join(self._deps, 'json')))
 
     @mock.patch('sys.platform', "win32")
     @mock.patch('subprocess.call')
-    def test_will_remove_archive_packages_that_have_been_removed(self, mock_subprocess):
+    @mock.patch('dem.piprunner.PipRunner.remove')
+    def test_will_remove_archive_packages_that_have_been_removed(self, mock_subprocess, mock_pip_runner):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_package('qt')
         self.create_package('json')
         cache = PackageCache('myProject', self._base_path)
         (config, packages) = reader.devenv_from_file(self._yaml_file)
 
-        uninstaller = PackageUninstaller(cache, packages)
+        uninstaller = PackageUninstaller(cache, packages, mock_pip_runner)
         uninstaller.uninstall_changed_packages()
 
         self.assertFalse(os.path.exists(os.path.join(self._deps, 'json')))
 
     @mock.patch('sys.platform', "win32")
     @mock.patch('subprocess.call')
-    def test_will_call_yum_for_removed_system_packages(self, mock_subprocess):
+    @mock.patch('dem.piprunner.PipRunner.remove')
+    def test_will_call_yum_for_removed_system_packages(self, mock_subprocess, mock_pip_runner):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
         self.create_package('qt')
         self.create_package('json')
         cache = PackageCache('myProject', self._base_path)
         (config, packages) = reader.devenv_from_file(self._yaml_file)
 
-        uninstaller = PackageUninstaller(cache, packages)
+        uninstaller = PackageUninstaller(cache, packages, mock_pip_runner)
         uninstaller.uninstall_changed_packages()
 
         mock_subprocess.assert_called_once_with(['sudo', 'yum', 'remove', 'gcc', '-y'])

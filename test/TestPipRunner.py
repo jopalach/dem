@@ -32,7 +32,7 @@ class MyTestCase(unittest.TestCase):
         self.pip = PipRunner(self.config, self.utils)
         self.pip.install('dem')
         command = self.utils.get_activate_script_command()
-        command.extend(['&&', 'pip', 'install', 'dem'])
+        command.extend(['&&', 'pip', '--yes', 'install', 'dem'])
         mock_subprocess.assert_called_with(command)
 
     @patch('subprocess.call')
@@ -41,7 +41,7 @@ class MyTestCase(unittest.TestCase):
         self.pip.install('dem', '0.5.9')
 
         mock_subprocess.assert_called_with(
-            self.utils.get_activate_script_command() + ['&&', 'pip', 'install', 'dem==0.5.9'])
+            self.utils.get_activate_script_command() + ['&&', 'pip', '--yes', 'install', 'dem==0.5.9'])
 
     @patch('subprocess.call')
     def test_will_install_version_specified_with_proxy(self, mock_subprocess):
@@ -51,7 +51,7 @@ class MyTestCase(unittest.TestCase):
         self.pip.install('dem', '0.5.9')
 
         mock_subprocess.assert_called_with(
-            self.utils.get_activate_script_command() + ['&&', 'pip', '--proxy=http://11.2.3.1:900', 'install',
+            self.utils.get_activate_script_command() + ['&&', 'pip', '--yes', '--proxy=http://11.2.3.1:900', 'install',
                                                         'dem==0.5.9'])
 
     @patch('dem.piprunner.PipRunner.install')

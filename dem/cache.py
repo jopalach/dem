@@ -52,6 +52,9 @@ class PackageCache(object):
     def custom_installed_packages(self):
         return self._packages_of_type('custom')
 
+    def pip_installed_packages(self):
+        return self._packages_of_type('pip')
+
     def install_locations(self, name):
         data = self._cache_data().get('packages', {})
         locations = data.get(name, {}).get('install_locations', [])

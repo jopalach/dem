@@ -1,11 +1,14 @@
 import os, subprocess
+
+from . piprunner import PipRunner
 from . utils import Utils
 
 
 class PackageUninstaller(object):
-    def __init__(self, cache, packages):
+    def __init__(self, cache, packages, pip_runner):
         self._cache = cache
         self._packages = packages
+        self._pip_runner = pip_runner
 
     def uninstall_changed_packages(self):
         for name, version in self._packages_to_remove(self._cache.local_installed_packages()):
@@ -19,6 +22,9 @@ class PackageUninstaller(object):
 
         for name, version in self._packages_to_remove(self._cache.system_installed_packages()):
             self._remove_system_package(name, version)
+
+        for name, version in self._packages_to_remove(self._cache.pip_installed_packages()):
+            self._pip_runner.remove(name, version)
 
     def _packages_to_remove(self, installed_packages):
         packages_to_remove = []
