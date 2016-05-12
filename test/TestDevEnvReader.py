@@ -10,7 +10,7 @@ config:
     remote-locations:
         ['/opt',
         'http://github.com']
-    http_proxy: http://192.168.1.2:9000
+    http-proxy: http://192.168.1.2:9000
 packages:
     qt:
         version: 4.8.6

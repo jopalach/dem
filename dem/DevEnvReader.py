@@ -21,13 +21,13 @@ class Config:
 
     def http_proxy(self):
         if self.has_http_proxy():
-            return self._config['http_proxy']
+            return self._config['http-proxy']
         return None
 
     def has_http_proxy(self):
         if not self._config:
             return False
-        return 'http_proxy' in self._config
+        return 'http-proxy' in self._config
 
 
 class Packages:
