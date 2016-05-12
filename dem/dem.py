@@ -1,7 +1,7 @@
 import os
 
 from .dependency.archive import ArchiveInstaller
-from .dependency.demgit import GitProjectInstaller
+from .dependency.git import GitProjectInstaller
 from .dependency.pip import PipInstaller, PipRunner
 from .dependency.uninstaller import PackageUninstaller
 from .dependency.url import UrlInstaller
