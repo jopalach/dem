@@ -1,6 +1,7 @@
-import os
 import hashlib
 import json
+import os
+
 BLOCKSIZE = 65536
 
 
