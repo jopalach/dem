@@ -40,8 +40,31 @@ class Utils(object):
 # http://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows
 def remove_read_only(func, path, exc):
     excvalue = exc[1]
-    if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
-        os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)  # 0777
-        func(path)
-    else:
-        raise
+    path_as_list = get_list(path)
+    index = path_as_list.index('.devenv') + 1
+    for index, val in enumerate(path_as_list):
+        if val.startswith('.') and val != '.devenv':
+            print("Encountered an error deleting: {}\nAttempting to fix...".format(path))
+            val = 'soonToBeDeleted'
+            dir_path = os.path.join(*path_as_list[0:index])
+            dir_path = os.path.join(dir_path, val)
+            os.rename(path, dir_path)  # 0777
+            if sys.platform == 'win32':
+                # http://www.thecodingforums.com/threads/removing-hidden-files-and-folders-with-python.588249/
+                os.system("attrib -r -h -s {}".format(dir_path))
+                os.chmod(dir_path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)  # 0777
+                func(dir_path)
+
+
+# http://stackoverflow.com/questions/3167154/how-to-split-a-dos-path-into-its-components-in-python
+def get_list(path):
+    folders = []
+    while 1:
+        path, folder = os.path.split(path)
+        if folder != "":
+            folders.append(folder)
+        else:
+            if path != "":
+                folders.append(path)
+            folders.reverse()
+            return folders
