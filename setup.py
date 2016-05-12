@@ -5,7 +5,7 @@ with open('README.rst') as f:
 
 setup(
     name="dem",
-    version="0.0.6",
+    version="0.0.6dev-1",
     author="Ian Macaulay, Jeremy Opalach",
     author_email="ismacaul@gmail.com",
     url="http://www.github.com/nitehawck/dem",
@@ -31,7 +31,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Build Tools',
     ],
-    packages=['dem'],
+    packages=['dem', 'dem.dependency', 'dem.project'],
     install_requires=[
         'virtualenv',
         'PyYaml',
@@ -41,5 +41,10 @@ setup(
     tests_require=[
         'pyfakefs',
         'mock'
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'dem = dem.__main__:main'
+        ]
+    },
 )
