@@ -41,7 +41,6 @@ class Utils(object):
 def remove_read_only(func, path, exc):
     excvalue = exc[1]
     path_as_list = get_list(path)
-    index = path_as_list.index('.devenv') + 1
     for index, val in enumerate(path_as_list):
         if val.startswith('.') and val != '.devenv':
             print("Encountered an error deleting: {}\nAttempting to fix...".format(path))
