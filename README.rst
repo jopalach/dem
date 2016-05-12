@@ -11,38 +11,79 @@ Development Environment Manager
         :target: http://dem.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
+==================
 Overview
---------
-An agnostic library/package manager for setting up a development project environment.  Dependencies are necessary for most projects and are seldom installed and maintained correctly.
+==================
 
-Key features:
-    * Installs a Python virtual environment
-    * Installs packages within the project only
+*"Go get dem packages!" - dem creators*
 
-Supports installing from packages existing in:
-    * Local filesystem
-    * URL's
-    * Yum packages
+Development Environment Manager (dem) is a python library used to manage a project dependencies in a consistent fashion.  This is most useful
+when working on a large project where multiple dependencies are required.
 
-Getting Started
----------------
-Create a devenv.yaml configuration file in your project's root directory.
+Benefits:
 
-.. code-block:: yaml
+* Easily setup the project in the same way every time
+* Get new team members setup faster
+* Keeps the system environment from getting polluted with project specifics
+* Install dependencies from many different mediums
 
-    config:
-       remote-locations: ['/var/myRepo/', '//network/myRepo']
-    packages:
-      json:
-          version: 1.53.3
-          type: archive
-          destination: python-site-packages
-      git-python:
-          version: 2
-          type: url
-          url: https://github.com/gitpython-developers/GitPython/archive/0.3.6.tar.gz
-     packages-linux:
-      alien:
-          version: 2.3
-          type: rpm
+Types of dependencies supported:
 
+* local/network archives and URLs (zips and tar.gz)
+* `git <https://git-scm.com/>`_ repositories
+* `yum <http://yum.baseurl.org/>`_ packages (Fedora based systems)
+* `pip <https://pip.pypa.io>`_ packages
+
+==================
+Requirements
+==================
+
+dem is a multi-platform tool which currently works on Fedora and Windows based platforms.
+
+Supported python versions:
+
+* 2.7
+* 3.3
+* 3.4
+* 3.5
+
+
+==================
+Install
+==================
+
+Installing dem is easily done using
+`pip`_. Assuming it is
+installed, just run the following from the command-line:
+
+.. sourcecode:: none
+
+    # pip install dem
+
+This command will download the latest version of dem from the
+`Python Package Index <http://pypi.python.org/pypi/dem>`_ and install it
+to your system. More information about ``pip`` and pypi can be found
+here:
+
+* `install pip <https://pip.pypa.io/en/latest/installing.html>`_
+* `pypi <https://pypi.python.org/pypi/dem>`_
+
+.. _pip: https://pip.pypa.io/en/latest/installing.html
+
+Alternatively, you can install from the distribution using the ``setup.py``
+script:
+
+.. sourcecode:: none
+
+    # python setup.py install
+
+Source Code
+===========
+::
+
+	$ git clone https://github.com/nitehawck/dem
+
+Finally verify the installation by running the `nose powered <http://code.google.com/p/python-nose/>`_ unit tests::
+::
+
+	$ nosetests
