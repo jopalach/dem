@@ -141,7 +141,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
-    @patch('platform.machine', MagicMock(return_value=('i386')))
+    @patch('platform.machine', MagicMock(return_value='i386'))
     def test_willInterpretSingleRemoteLocationAsListWithOSSearchesAdded(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_ONLY_ONE_REMOTE_LOCATION)
 
@@ -153,7 +153,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
-    @patch('platform.machine', MagicMock(return_value=('i386')))
+    @patch('platform.machine', MagicMock(return_value='i386'))
     def test_willReadLinuxPackagesFromFile(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT_WITH_LINUX_AND_ALL_PACKAGES)
 
@@ -174,7 +174,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
         self.assertNotEquals(packages['Which'], None)
 
     @patch('sys.platform', "win32")
-    @patch('platform.machine', MagicMock(return_value=('amd64')))
+    @patch('platform.machine', MagicMock(return_value='amd64'))
     def test_wilAddSearchPathsBasedOnWindowsAndArch(self):
         self.fs.CreateFile('devenv.yaml', contents=SAMPLE_CONTENT)
 

@@ -88,7 +88,7 @@ class MyTestCase(unittest.TestCase):
                 return True
             return False
 
-        self.cache.is_package_installed.side_effect = is_installed;
+        self.cache.is_package_installed.side_effect = is_installed
         packages = [{'name': 'package', 'version': '1.3.0'},
                     {'name': 'package4', 'version': '0.3.0'}]
         pip_installer = PipInstaller(packages, self.config, self.cache, self.utils)
