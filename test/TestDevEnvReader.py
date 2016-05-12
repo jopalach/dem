@@ -7,7 +7,7 @@ import dem.DevEnvReader as reader
 
 SAMPLE_CONTENT = '''
 config:
-    remote_locations:
+    remote-locations:
         ['/opt',
         'http://github.com']
     http_proxy: http://192.168.1.2:9000
@@ -33,7 +33,7 @@ packages:
 
 SAMPLE_CONTENT_WITH_ONLY_ONE_REMOTE_LOCATION = '''
 config:
-    remote_locations:
+    remote-locations:
         '/opt'
 packages:
     qt:
@@ -54,7 +54,7 @@ packages:
 
 SAMPLE_CONTENT_WITH_LINUX_AND_ALL_PACKAGES = '''
 config:
-    remote_locations:
+    remote-locations:
         '/opt'
 packages:
     qt:
@@ -70,7 +70,7 @@ packages-linux:
 
 SAMPLE_CONTENT_WITH_WINDOWS_AND_ALL_PACKAGES = '''
 config:
-    remote_locations:
+    remote-locations:
         '/opt'
 packages:
     qt:
@@ -147,7 +147,9 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
 
         (config, packages) = reader.devenv_from_file('devenv.yaml')
 
-        self.assertEquals(config['remote_locations'], [os.path.join('/opt', 'centos7', 'i386'), os.path.join('/opt', 'rhel7', 'i386'), os.path.join('/opt', 'centos7'), os.path.join('/opt', 'rhel7'), '/opt'])
+        self.assertEquals(config['remote-locations'],
+                          [os.path.join('/opt', 'centos7', 'i386'), os.path.join('/opt', 'rhel7', 'i386'),
+                           os.path.join('/opt', 'centos7'), os.path.join('/opt', 'rhel7'), '/opt'])
 
     @patch('sys.platform', "linux")
     @patch('platform.linux_distribution', MagicMock(return_value=('centos', '7.34.21', 'core')))
@@ -178,7 +180,7 @@ class TestDevEnvReader(fake_filesystem_unittest.TestCase):
 
         (config, packages) = reader.devenv_from_file('devenv.yaml')
 
-        self.assertEquals(config['remote_locations'],
+        self.assertEquals(config['remote-locations'],
                           [os.path.join('/opt', 'win32', 'x86_64'), os.path.join('/opt', 'win32'), '/opt',
                            os.path.join('http://github.com', 'win32', 'x86_64'),
                            os.path.join('http://github.com', 'win32'), 'http://github.com'])

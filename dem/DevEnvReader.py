@@ -12,12 +12,12 @@ class Config:
     def remote_locations(self):
         if not self.has_remote_locations():
             return []
-        return self._config['remote_locations']
+        return self._config['remote-locations']
 
     def has_remote_locations(self):
         if self._config is None:
             return False
-        return 'remote_locations' in self._config
+        return 'remote-locations' in self._config
 
     def http_proxy(self):
         if self.has_http_proxy():
@@ -77,18 +77,19 @@ class Packages:
 def _fixup_remote_locations(config):
     if config is None:
         config = {}
-    if 'remote_locations' not in config:
-        config['remote_locations'] = []
-    if 'remote_locations' in config and not isinstance(config['remote_locations'], list):
-        config['remote_locations'] = [config['remote_locations']]
+    if 'remote-locations' not in config:
+        config['remote-locations'] = []
+    if 'remote-locations' in config and not isinstance(config['remote-locations'], list):
+        config['remote-locations'] = [config['remote-locations']]
     _add_additional_search_locations_based_on_platform(config)
 
 def _add_additional_search_locations_based_on_platform(config):
     (os_short, arch) = _os_info()
-    remote_locations = config['remote_locations'][:]
+    remote_locations = config['remote-locations'][:]
     for location in remote_locations:
-        config['remote_locations'].insert(config['remote_locations'].index(location), os.path.join(location, os_short, arch))
-        config['remote_locations'].insert(config['remote_locations'].index(location), os.path.join(location, os_short))
+        config['remote-locations'].insert(config['remote-locations'].index(location),
+                                          os.path.join(location, os_short, arch))
+        config['remote-locations'].insert(config['remote-locations'].index(location), os.path.join(location, os_short))
 
     _add_additional_search_locations_based_on_centos_or_rhel(config)
 
@@ -102,11 +103,11 @@ def _add_additional_search_locations_based_on_centos_or_rhel(config):
         os_short = os_short.replace('rhel', 'centos')
     else:
         return
-    remote_locations = config['remote_locations'][:]
+    remote_locations = config['remote-locations'][:]
     for location in remote_locations:
         if os_short_original in location:
             replace_location = location.replace(os_short_original, os_short)
-            config['remote_locations'].insert(config['remote_locations'].index(location) + 1, replace_location)
+            config['remote-locations'].insert(config['remote-locations'].index(location) + 1, replace_location)
 
 
 def _os_info():

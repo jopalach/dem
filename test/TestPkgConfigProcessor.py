@@ -8,7 +8,7 @@ from dem import DevEnvReader as reader
 
 SAMPLE_YAML_CONTENT = '''
 config:
-    remote_locations:
+    remote-locations:
         ['/opt',
         'http://github.com']
 packages:

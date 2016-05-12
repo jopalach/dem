@@ -26,12 +26,12 @@ Running dem at this point will download and install boost to the ``PROJECT_ROOT/
 to download large dependencies ahead of time and store them in a repository locally or on the local network.  This can be done by specifying a remote location.
 Remote locations can be local or network locations.
 
-Here the ``config`` block is introduced where ``remote_locations`` can be added.
+Here the ``config`` block is introduced where ``remote-locations`` can be added.
 
 ::
 
     config:
-        remote_locations: ['C:\repository', '\\mynetwork\repository]
+        remote-locations: ['C:\repository', '\\mynetwork\repository]
     packages:
         boost:
             version: 1.60.0

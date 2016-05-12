@@ -8,7 +8,7 @@ from dem.cache import PackageCache
 
 SAMPLE_YAML_CONTENT = '''
 config:
-    remote_locations:
+    remote-locations:
         ['/opt',
         'http://github.com']
 packages:
@@ -22,7 +22,7 @@ packages:
 
 DIFFERENT_SAMPLE_YAML_CONTENT = '''
 config:
-    remote_locations:
+    remote-locations:
         ['/opt',
         'http://github.com']
 packages:
@@ -37,7 +37,7 @@ packages:
 
 SAMPLE_CACHE_CONTENT = '''
 {
-    "md5": "b084deb42d4daefe7c29d4eae24c2d2d"
+    "md5": "fd7590e5b7bbbfb051dca1ee9745041b"
 }
 '''
 

@@ -49,7 +49,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages:
                 json:
                     version: 1.8
@@ -72,7 +72,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages:
                 json:
                     version: 1.8
@@ -95,7 +95,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location2 = os.path.abspath(os.path.join(os.pathsep, 'opt2'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: [\'''' + remote_location1 + '\', \'' + remote_location2 + '''\']
+                remote-locations: [\'''' + remote_location1 + '\', \'' + remote_location2 + '''\']
             packages:
                 json:
                     version: 1.8
@@ -124,7 +124,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages:
                 json:
                     version: 1.8
@@ -146,7 +146,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages-linux:
                 json:
                     version: 1.8
@@ -169,7 +169,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
                 config:
-                    remote_locations: ''' + remote_location + '''
+                    remote-locations: ''' + remote_location + '''
                 packages-win32:
                     json:
                         version: 1.8
@@ -192,7 +192,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages-linux:
                 json:
                     version: 1.8
@@ -214,7 +214,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
                 config:
-                    remote_locations: ''' + remote_location + '''
+                    remote-locations: ''' + remote_location + '''
                 packages-win32:
                     json:
                         version: msvc2015-1.8
@@ -237,7 +237,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages:
                 json:
                     version: 1.8
@@ -261,7 +261,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
                config:
-                   remote_locations: ''' + remote_location + '''
+                   remote-locations: ''' + remote_location + '''
                packages:
                    json:
                        version: 1.8
@@ -284,7 +284,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages:
                 json:
                     version: 1.8
@@ -309,7 +309,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
                config:
-                   remote_locations: ''' + remote_location + '''
+                   remote-locations: ''' + remote_location + '''
                packages:
                    json:
                        version: 1.8
@@ -361,7 +361,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages:
                 json:
                     version: 1.8
@@ -413,7 +413,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages:
                 json:
                     version: 1.8
@@ -434,7 +434,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
-                remote_locations: ''' + remote_location + '''
+                remote-locations: ''' + remote_location + '''
             packages:
                 json:
                     version: 1.8

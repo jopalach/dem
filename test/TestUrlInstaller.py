@@ -72,7 +72,7 @@ class TestUrlInstaller(unittest.TestCase):
     #     print "hi"
     #     installer.install_packages()
     #
-    #     expected_config = Config({'remote_locations:', os.path.join('.devenv', 'myProject', 'downloads')})
+        #     expected_config = Config({'remote-locations:', os.path.join('.devenv', 'myProject', 'downloads')})
     #     mock_archive_installer.assert_called_once_with('myProject', expected_config, packages)
 
 

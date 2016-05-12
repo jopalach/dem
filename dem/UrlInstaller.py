@@ -12,7 +12,7 @@ class UrlInstaller:
         self._packages = packages
         self._project = project
         self._download_directory = os.path.join('.devenv', project, 'downloads')
-        self._config = Config({'remote_locations': [self._download_directory]})
+        self._config = Config({'remote-locations': [self._download_directory]})
         self._cache = cache
 
     def install_packages(self):
