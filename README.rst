@@ -56,7 +56,7 @@ Installing dem is easily done using
 `pip`_. Assuming it is
 installed, just run the following from the command-line:
 
-.. sourcecode:: none
+.. code-block:: none
 
     # pip install dem
 
@@ -73,7 +73,7 @@ here:
 Alternatively, you can install from the distribution using the ``setup.py``
 script:
 
-.. sourcecode:: none
+.. code-block:: none
 
     # python setup.py install
 
