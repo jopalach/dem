@@ -5,7 +5,7 @@ import os
 from dem.piprunner import PipRunner
 from dem.uninstaller import PackageUninstaller
 from dem.cache import PackageCache
-from dem import DevEnvReader as reader
+from dem import reader as reader
 
 SAMPLE_YAML_CONTENT = '''
 config:

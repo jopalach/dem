@@ -3,8 +3,8 @@ import os
 import sys
 import wget
 
-from . ArchiveInstaller import ArchiveInstaller
-from . DevEnvReader import Config
+from .archive import ArchiveInstaller
+from .reader import Config
 
 
 class UrlInstaller:

@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from dem.DevEnvReader import Config
+from dem.reader import Config
 from dem.cache import PackageCache
 
 try:

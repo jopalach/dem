@@ -6,7 +6,7 @@ try:
 except ImportError:
     from unittest.mock import patch
 
-from dem.GitProjectInstaller import GitProjectInstaller
+from dem.git import GitProjectInstaller
 from dem.cache import PackageCache
 
 

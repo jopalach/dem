@@ -1,8 +1,8 @@
 import os
 import unittest, mock
 import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
-from dem.EnvironmentBuilder import EnvironmentBuilder
-from dem.DevEnvReader import Config
+from dem.environment import EnvironmentBuilder
+from dem.reader import Config
 
 class TestEnvironmentBuilder(fake_filesystem_unittest.TestCase):
     def setUp(self):

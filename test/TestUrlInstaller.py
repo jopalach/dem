@@ -3,7 +3,7 @@ import unittest
 import mock
 
 from dem.cache import PackageCache
-from dem.UrlInstaller import UrlInstaller
+from dem.url import UrlInstaller
 
 
 class TestUrlInstaller(unittest.TestCase):

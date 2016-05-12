@@ -4,7 +4,7 @@ import os
 
 from dem.pkgconfig import PkgConfigProcessor
 from dem.cache import PackageCache
-from dem import DevEnvReader as reader
+from dem import reader as reader
 
 SAMPLE_YAML_CONTENT = '''
 config:

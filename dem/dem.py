@@ -2,14 +2,14 @@ import os
 
 import sys
 
-from . GitProjectInstaller import GitProjectInstaller
-from . ArchiveInstaller import ArchiveInstaller
-from . import DevEnvReader as reader
-from . EnvironmentBuilder import EnvironmentBuilder
-from . RpmInstaller import RpmInstaller
+from .git import GitProjectInstaller
+from .archive import ArchiveInstaller
+from . import reader as reader
+from .environment import EnvironmentBuilder
+from .yum import RpmInstaller
 from . cache import PackageCache
 from . uninstaller import PackageUninstaller
-from . UrlInstaller import UrlInstaller
+from .url import UrlInstaller
 from .utils import Utils
 from . piprunner import PipInstaller, PipRunner
 
