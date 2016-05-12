@@ -13,7 +13,10 @@ class RpmInstaller:
                 print('[dem] {}-{} already installed'.format(p['name'], p['version']))
             else:
                 print('[dem] installing {}-{}'.format(p['name'], p['version']))
-                package_file = "{}-{}".format(p['name'], p['version'])
+                if p['version'] == 'latest':
+                    package_file = p['name']
+                else:
+                    package_file = "{}-{}".format(p['name'], p['version'])
                 self._execute_yum(package_file)
             package = dict()
             package[p['name']] = {'version': p['version'], 'type': 'system'}
