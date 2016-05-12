@@ -45,12 +45,3 @@ def get_dem_packages(project):
 
     cache.update(installed_packages)
 
-
-def main():
-    project = os.path.basename(os.getcwd())
-    get_dem_packages(project)
-
-
-if __name__ == '__main__':
-    main()
-

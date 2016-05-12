@@ -38,6 +38,17 @@ class TestRpmInstaller(unittest.TestCase):
         installer.install_packages()
         mock_subprocess.assert_not_called()
 
+    @mock.patch('subprocess.call')
+    def test_will_not_add_version_if_version_is_latest(self, mock_subprocess):
+        cache = mock.MagicMock(spec=PackageCache)
+        cache.is_package_installed.return_value = False
+        packages = [{'name': 'package', 'version': 'latest'},
+                    {'name': 'package2', 'version': '0.3.0'}]
+        installer = RpmInstaller(packages, cache)
+        installer.install_packages()
+
+        mock_subprocess.assert_any_call(['sudo', 'yum', 'install', 'package', '-y'])
+        mock_subprocess.assert_any_call(['sudo', 'yum', 'install', 'package2-0.3.0', '-y'])
 
 if __name__ == '__main__':
     unittest.main()

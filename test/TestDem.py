@@ -409,7 +409,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
     @patch('sys.platform', "win32")
     @patch('subprocess.call')
     @patch('sys.stdout', new_callable=StringIO)
-    def test_will_not_extract_already_installed_archive(self, mock_stdout, mock_subprocess):
+    def test_will_not_install_already_installed_rpm(self, mock_stdout, mock_subprocess):
         remote_location = os.path.abspath(os.path.join(os.pathsep, 'opt'))
         self.fs.CreateFile('devenv.yaml', contents='''
             config:
@@ -427,6 +427,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
         go.get_dem_packages(self.project)
 
         self.assertTrue('json-1.8 already installed' in mock_stdout.getvalue())
+
 
     @patch('sys.platform', "win32")
     @mock.patch('subprocess.call', MagicMock())
