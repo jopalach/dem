@@ -53,10 +53,10 @@ Install
 ==================
 
 Installing dem is easily done using
-`pip`_. Assuming it is
+`pip <https://pip.pypa.io>`_. Assuming it is
 installed, just run the following from the command-line:
 
-.. code-block:: none
+::
 
     # pip install dem
 
@@ -68,12 +68,10 @@ here:
 * `install pip <https://pip.pypa.io/en/latest/installing.html>`_
 * `pypi <https://pypi.python.org/pypi/dem>`_
 
-.. _pip: https://pip.pypa.io/en/latest/installing.html
-
 Alternatively, you can install from the distribution using the ``setup.py``
 script:
 
-.. code-block:: none
+::
 
     # python setup.py install
 
