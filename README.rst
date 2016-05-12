@@ -77,8 +77,6 @@ script:
 
     # python setup.py install
 
-.. note:: In this case, you have to manually install all requirements as well. It would be recommended to use the :ref:`git source repository <source-code-label>` in that case.
-
 Source Code
 ===========
 ::
