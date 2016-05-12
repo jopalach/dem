@@ -1,7 +1,8 @@
 import unittest
+
 import mock
-from dem.yum import RpmInstaller
-from dem.cache import PackageCache
+from dem.dependency.yum import RpmInstaller
+from dem.project.cache import PackageCache
 
 
 class TestRpmInstaller(unittest.TestCase):

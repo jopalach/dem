@@ -1,10 +1,8 @@
 import os
 
-import sys
 import wget
-
-from .archive import ArchiveInstaller
-from .reader import Config
+from dem.dependency.archive import ArchiveInstaller
+from dem.project.reader import Config
 
 
 class UrlInstaller:

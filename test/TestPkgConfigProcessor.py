@@ -1,10 +1,11 @@
-import unittest, mock
-import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
 import os
+import unittest
 
-from dem.pkgconfig import PkgConfigProcessor
-from dem.cache import PackageCache
-from dem import reader as reader
+import mock
+import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
+from dem.project import reader as reader
+from dem.project.cache import PackageCache
+from dem.project.pkgconfig import PkgConfigProcessor
 
 SAMPLE_YAML_CONTENT = '''
 config:

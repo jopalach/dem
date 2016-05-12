@@ -1,8 +1,9 @@
 import gzip
-import os, sys
+import os
 from tarfile import TarFile
 from zipfile import ZipFile
-from . pkgconfig import PkgConfigProcessor
+
+from dem.project.pkgconfig import PkgConfigProcessor
 
 
 class ArchiveInstaller:

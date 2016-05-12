@@ -1,6 +1,7 @@
 import os
-from . utils import Utils
+
 from git import Repo
+from dem.project.utils import Utils
 
 
 class GitProjectInstaller:

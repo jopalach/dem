@@ -448,7 +448,7 @@ class MyDem(fake_filesystem_unittest.TestCase):
 
     @patch('sys.platform', "win32")
     @mock.patch('subprocess.call', MagicMock())
-    @patch('dem.piprunner.PipRunner.install')
+    @patch('dem.dependency.pip.PipRunner.install')
     def test_willInstallLatestDem(self, mock_pip):
         self.fs.CreateFile('devenv.yaml')
 

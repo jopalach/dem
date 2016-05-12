@@ -1,7 +1,7 @@
-import os, subprocess
+import os
+import subprocess
 
-from . piprunner import PipRunner
-from . utils import Utils
+from dem.project.utils import Utils
 
 
 class PackageUninstaller(object):

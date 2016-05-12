@@ -1,11 +1,12 @@
-import unittest, mock
-import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
 import os
+import unittest
 
-from dem.piprunner import PipRunner
-from dem.uninstaller import PackageUninstaller
-from dem.cache import PackageCache
-from dem import reader as reader
+import mock
+import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
+from dem.dependency.pip import PipRunner
+from dem.dependency.uninstaller import PackageUninstaller
+from dem.project import reader as reader
+from dem.project.cache import PackageCache
 
 SAMPLE_YAML_CONTENT = '''
 config:
@@ -65,7 +66,7 @@ class TestPackageUninstaller(fake_filesystem_unittest.TestCase):
         self.setup_directories()
 
     @mock.patch('sys.platform', "win32")
-    @mock.patch('dem.piprunner.PipRunner.remove')
+    @mock.patch('dem.dependency.pip.PipRunner.remove')
     @mock.patch('subprocess.call')
     def test_will_remove_archive_packages_that_have_changed(self, mock_subprocess, mock_pip_runner):
         self.setup_files(SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
@@ -80,7 +81,7 @@ class TestPackageUninstaller(fake_filesystem_unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join(self._deps, 'json')))
 
     @mock.patch('sys.platform', "win32")
-    @mock.patch('dem.piprunner.PipRunner.remove')
+    @mock.patch('dem.dependency.pip.PipRunner.remove')
     @mock.patch('subprocess.call')
     def test_will_remove_archive_packages_that_have_been_removed(self, mock_subprocess, mock_pip_runner):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
@@ -95,7 +96,7 @@ class TestPackageUninstaller(fake_filesystem_unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join(self._deps, 'json')))
 
     @mock.patch('sys.platform', "win32")
-    @mock.patch('dem.piprunner.PipRunner.remove')
+    @mock.patch('dem.dependency.pip.PipRunner.remove')
     @mock.patch('subprocess.call')
     def test_will_call_yum_for_removed_system_packages(self, mock_subprocess, mock_pip_runner):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)
@@ -110,7 +111,7 @@ class TestPackageUninstaller(fake_filesystem_unittest.TestCase):
         mock_subprocess.assert_called_once_with(['sudo', 'yum', 'remove', 'gcc', '-y'])
 
     @mock.patch('sys.platform', "win32")
-    @mock.patch('dem.piprunner.PipRunner', spec=PipRunner)
+    @mock.patch('dem.dependency.pip.PipRunner', spec=PipRunner)
     @mock.patch('subprocess.call')
     def test_will_call_pip_for_removed_system_packages(self, mock_subprocess, mock_pip_runner):
         self.setup_files(DIFFERENT_SAMPLE_YAML_CONTENT, SAMPLE_CACHE_CONTENT)

@@ -1,17 +1,15 @@
 import os
 
-import sys
-
-from .git import GitProjectInstaller
-from .archive import ArchiveInstaller
-from . import reader as reader
-from .environment import EnvironmentBuilder
-from .yum import RpmInstaller
-from . cache import PackageCache
-from . uninstaller import PackageUninstaller
-from .url import UrlInstaller
-from .utils import Utils
-from . piprunner import PipInstaller, PipRunner
+from .dependency.archive import ArchiveInstaller
+from .dependency.demgit import GitProjectInstaller
+from .dependency.pip import PipInstaller, PipRunner
+from .dependency.uninstaller import PackageUninstaller
+from .dependency.url import UrlInstaller
+from .dependency.yum import RpmInstaller
+from .project import reader as reader
+from .project.cache import PackageCache
+from .project.environment import EnvironmentBuilder
+from .project.utils import Utils
 
 
 def get_dem_packages(project):

@@ -1,10 +1,10 @@
-import unittest, mock
-import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
 import hashlib
 import json
 import os
+import unittest
 
-from dem.cache import PackageCache
+import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
+from dem.project.cache import PackageCache
 
 SAMPLE_YAML_CONTENT = '''
 config:

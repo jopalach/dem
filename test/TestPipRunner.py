@@ -1,16 +1,16 @@
 import os
 import unittest
 
-from dem.reader import Config
-from dem.cache import PackageCache
+from dem.project.cache import PackageCache
+from dem.project.reader import Config
 
 try:
     from mock import patch, MagicMock
 except ImportError:
     from unittest.mock import patch, MagicMock
 
-from dem.piprunner import PipRunner, PipInstaller
-from dem.utils import Utils
+from dem.dependency.pip import PipRunner, PipInstaller
+from dem.project.utils import Utils
 
 
 class MyTestCase(unittest.TestCase):
@@ -70,7 +70,7 @@ class MyTestCase(unittest.TestCase):
             self.utils.get_activate_script_command() + ['&&', 'pip', '--proxy=http://11.2.3.1:900', 'install',
                                                         'dem==0.5.9'])
 
-    @patch('dem.piprunner.PipRunner.install')
+    @patch('dem.dependency.pip.PipRunner.install')
     def test_will_install_packages_not_in_cache(self, mock_installer):
         self.cache.is_package_installed.return_value = False
         packages = [{'name': 'package', 'version': '1.3.0'},
@@ -81,7 +81,7 @@ class MyTestCase(unittest.TestCase):
         mock_installer.assert_any_call('package', '1.3.0')
         mock_installer.assert_any_call('package4', '0.3.0')
 
-    @patch('dem.piprunner.PipRunner.install')
+    @patch('dem.dependency.pip.PipRunner.install')
     def test_will_not_install_packages_in_cache(self, mock_installer):
         def is_installed(package, version):
             if package == 'package':

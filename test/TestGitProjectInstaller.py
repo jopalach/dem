@@ -6,8 +6,8 @@ try:
 except ImportError:
     from unittest.mock import patch
 
-from dem.git import GitProjectInstaller
-from dem.cache import PackageCache
+from dem.dependency.demgit import GitProjectInstaller
+from dem.project.cache import PackageCache
 
 
 class TestGitProjectInstaller(unittest.TestCase):

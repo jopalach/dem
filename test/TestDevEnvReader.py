@@ -1,9 +1,9 @@
 import os
 import unittest
+
+import dem.project.reader as reader
 import pyfakefs.fake_filesystem_unittest as fake_filesystem_unittest
 from mock import patch, MagicMock
-
-import dem.reader as reader
 
 SAMPLE_CONTENT = '''
 config:

@@ -1,9 +1,9 @@
 import os
 import unittest
-import mock
 
-from dem.cache import PackageCache
-from dem.url import UrlInstaller
+import mock
+from dem.dependency.url import UrlInstaller
+from dem.project.cache import PackageCache
 
 
 class TestUrlInstaller(unittest.TestCase):
