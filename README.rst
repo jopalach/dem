@@ -79,17 +79,13 @@ script:
 
 .. note:: In this case, you have to manually install all requirements as well. It would be recommended to use the :ref:`git source repository <source-code-label>` in that case.
 
-.. _source-code-label:
 Source Code
 ===========
-
-Development Environment Manager git repo is available on GitHub, which can be browsed at:
-    * https://github.com/nitehawck/dem
-
-and cloned using::
+::
 
 	$ git clone https://github.com/nitehawck/dem
 
 Finally verify the installation by running the `nose powered <http://code.google.com/p/python-nose/>`_ unit tests::
+::
 
-    $ nosetests
+	$ nosetests
